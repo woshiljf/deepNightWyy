@@ -6,7 +6,6 @@ const state = {
   password: '',
   tabData: [],
   treeData: [],
-  token: ''
 }
 
 //getters 
@@ -23,9 +22,6 @@ const getters = {
   treeData: state => {
     return state.treeData
   },
-  token: state => {
-    return state.token
-  },
 }
 
 const mutations = {
@@ -41,9 +37,6 @@ const mutations = {
   [types.SET_TREEDTA](state, treeData) {
     state.treeData = treeData
   },
-  [types.SET_TOKEN](state, token) {
-    state.token = token
-  }
 }
 
 export default {

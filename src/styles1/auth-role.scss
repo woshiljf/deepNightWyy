@@ -1,0 +1,69 @@
+.auth-role{
+    .role-list-tabel-css {
+        box-shadow: 0 3px 10px rgba(46, 8, 8, 0.1)
+    }
+    .text-position-right{
+    text-align:right
+    }
+    .text-position-center{
+    text-align:center
+    }
+    .marginLeft50-width400 {
+    width: 400px;
+    margin-left:50px;
+    }
+    .color67c23a {
+    color: #67C23A;
+    }
+    .view-button {
+        background: #409EFF;
+        border-color: #409EFF;
+        color: #fff;
+        padding: 9px 15px;
+        font-size: 12px;
+        border-radius: 3px;
+    }
+    .edit-button {
+        background: #ebb563;
+    border-color: #ebb563;
+    color: #fff;
+    padding: 9px 15px;
+    font-size: 12px;
+    border-radius: 3px;
+    }
+    .colore6a23c {
+    color:#E6A23C
+    }
+    .el-dialog{
+        height: 60vh;
+        overflow: scroll;
+        .el-dialog__header{
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 1;
+            border-radius: 5px;
+        }
+    }
+    .pagination-container{
+        margin-top: 0;
+        padding: 8px 16px !important;
+    }
+    .filter-container{
+        padding-top: 10px;
+        padding-right: 10px;
+        padding-bottom: 0;
+    }
+    .el-table thead .cell{
+        line-height: 24px;
+    }
+    .el-table tbody .cell{
+        line-height: 16px;
+        padding: 0;
+    }
+    .el-table--mini td, .el-table--mini th {
+        padding: 3px 0;
+        text-align: center;
+    }
+
+}

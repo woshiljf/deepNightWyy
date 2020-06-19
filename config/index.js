@@ -12,6 +12,18 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
         '/api': {
+          target: 'http://10.65.6.201:8085',
+          // target: 'http://10.65.2.40:8087',   // 张某某
+          // target: 'http://10.65.1.105:8087',  // 某某某
+          // target: 'http://v.juhe.cn/toutiao/index', // 测试端口
+          // target: 'http://10.65.6.1:8187', // 开发端口
+          changeOrigin: true,
+          secure: false,
+          pathRewrite: {
+            '^/api': ''
+          },
+        },
+        '/pdc': {
           // target: 'http://localhost:8080',
           // target: 'http://10.65.2.40:8087',   // 张某某
           // target: 'http://10.65.1.105:8087',  // 某某某
@@ -20,21 +32,24 @@ module.exports = {
           changeOrigin: true,
           secure: false,
           pathRewrite: {
-            '^/api': ''
+            '^/pdc': ''
           },
-          '/pdc': {
-            // target: 'http://localhost:8080',
-            // target: 'http://10.65.2.40:8087',   // 张某某
-            // target: 'http://10.65.1.105:8087',  // 某某某
-            target: 'http://10.65.6.201:8087', // 测试端口
-            // target: 'http://10.65.6.1:8187', // 开发端口
-            changeOrigin: true,
-            secure: false,
-            pathRewrite: {
-              '^/pdc': ''
-            },
-          }
         },
+        '/bff': {
+          // target: 'http://10.65.6.201:8098', // 测试端口
+          target: 'http://10.65.6.1:8094', // 开发环境
+          // target: 'http://10.65.2.59:8080', // 戴逢
+          // target: 'http://10.65.1.26:8088', // 朱家田
+          // target: 'http://10.65.2.109:8090',   // 仁浩
+          // target: 'http://10.65.6.1:8299', // bff(收发货接口)
+          // target: 'http://10.65.2.59:8080', // 戴逢
+          // target: 'http://10.65.6.201:8302',
+          changeOrigin: true,
+          secure: false,
+          pathRewrite: {
+            '^/bff': ''
+          }
+        }
     },
 
     // Various Dev Server settings
