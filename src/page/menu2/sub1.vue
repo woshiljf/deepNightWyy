@@ -1,16 +1,34 @@
 <template lang="html">
-  <div class="table-content">
 
-    <el-table :data="tableData" size="mini" border style="width: 100%">
-      <el-table-column prop="date" label="日期" width="180"></el-table-column>
-      <el-table-column prop="name" label="姓名" width="180"></el-table-column>
-      <el-table-column prop="address" label="地址"></el-table-column>
-    </el-table>
-    <pagination
-      @sendPageSize="receivePageSize"
-      @sendCurrentPage="receiveCurrentPage"
-      :totalPage="totalPage"
-    ></pagination>
+  <div class="table">
+    <el-form :model="form" ref="form" label-width="80px">
+
+      <el-form-item label="学校:">
+        <el-input v-model="form.school"></el-input>
+      </el-form-item>
+      <el-form-item label="邮箱:">
+        <el-input v-model="form.email"></el-input>
+      </el-form-item>
+      <el-form-item label="地址:">
+        <el-input v-model="form.addr"></el-input>
+      </el-form-item>
+
+      <el-form-item>
+        <el-button type="primary" @click="onSubmit">立即保存</el-button>
+        <el-button @click="cancelSave">取消</el-button>
+      </el-form-item>
+    </el-form>
+
+    <el-dialog title="收货地址" :visible.sync="dialogFormVisible">
+      <div> 信息没有保存</div>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="onSubmit">确 定</el-button>
+      </div>
+    </el-dialog>
+    
+
+
   </div>
 </template>
 
@@ -19,48 +37,51 @@ import pagination from "common/pagination";
 export default {
   data() {
     return {
-      totalPage: 300,
-      tableData: [
-        {
-          date: "2016-05-02",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄"
-        },
-        {
-          date: "2016-05-04",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1517 弄"
-        },
-        {
-          date: "2016-05-01",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1519 弄"
-        },
-        {
-          date: "2016-05-03",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1516 弄"
-        }
-      ]
-    };
-  },
-  methods: {
-    receivePageSize(val) {
-      console.log(val);
-    },
-    receiveCurrentPage(val) {
-      console.log(val);
+      form: {
+        school: '',
+        email: '',
+        addr: ''
+      },
+      dialogFormVisible: false ,
+      flag: false
+      
     }
   },
-  components: {
-    pagination
+  methods: {
+    onSubmit() {
+      const mesg = Object.assign({},this.from)
+      console.log('保存成功')
+      this.$notify({
+        message: '保存成功',
+        type: 'success',
+        duration: 2000
+      })
+      this.dialogFormVisible = false
+      this.flag = true
+    },
+    cancelSave() {
+      console.log('取消保存')
+      this.$notify({
+        message: '取消成功',
+        type: 'success',
+        duration: 2000
+      })
+    }
+  },
+  beforeRouteLeave(to,from,next) {
+    if(this.dialogFormVisible ==false && this.flag ==false) {
+      this.dialogFormVisible = true
+      next(false)
+      return
+    }else{
+      this.flag = false
+      next()
+    }
   }
-};
+
+}
 </script>
 
 <style scoped lang="scss">
-.table-content{
-  margin-top: 20px;
-  margin-bottom: 20px;
-}
+
 </style>

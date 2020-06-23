@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import common from './modules/common';
-import test from './modules/test'
+import tagsRoute from './modules/tagsRoute'
 import user from './modules/user'
 import {getters} from './getters'
 Vue.use(Vuex);
@@ -9,7 +9,7 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
   modules: {
       common,
-      test,
+      tagsRoute,
       user
   },
   getters

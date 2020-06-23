@@ -9,7 +9,7 @@ import App from './App.vue';
 import 'font-awesome/css/font-awesome.min.css';
 import router from "./router";
 import VCharts from 'v-charts'
-import '@/styles1/index.scss'
+import '@/styles/index.scss'
 // import './mock'
 
 Vue.use(ElementUI);

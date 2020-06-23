@@ -65,7 +65,7 @@ export default {
   },
   data() {
     return {
-      arry: this.$store.state.test.routeArr,
+      arry: this.$store.state.tagsRoute.routeArr,
       activepath: '',
     }
   },
@@ -102,15 +102,14 @@ export default {
       }
       sessionStorage.setItem("tabData", JSON.stringify(this.arry));
     },
-        // 检查树结构是否包含当前节点1111111111
+        // 检查树结构是否包含当前节点
     checkContains(name) {
       return true;
       // return this.treeArry.includes(name);
     },
         // 往tab页添加router
     addRouter(data, path) {
-      console.log(data)
-      const obj = Object.assign({}, data);
+      const obj = Object.assign({}, data)
       if (path) {
         obj.path = path
       }

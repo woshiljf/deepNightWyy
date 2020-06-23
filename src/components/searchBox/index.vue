@@ -18,6 +18,7 @@
 
                     <el-form-item :label="option.label" v-if="option.proptype==='date'">
                       <div class="block">
+                        <span style="color: red">*</span>
                         <el-date-picker
                           v-model="searchQuery[option.name]"
                           type="date"

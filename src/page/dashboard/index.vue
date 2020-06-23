@@ -6,11 +6,10 @@
   </div>
 </template>
 <script>
-
 export default {
   data() {
     return {
-      userName:''
+      userName: ''
     }
   },
   created(){
@@ -19,13 +18,12 @@ export default {
       user = JSON.parse(user)
       this.userName = user.loginName
     }
-  },
+  }
 }
 </script>
 <style scoped>
-.dashboard {
-  margin: 0 auto;
-  text-align: center;
-}
-
+  .dashboard {
+    margin: 0 auto;
+    text-align: center;
+  }
 </style>
