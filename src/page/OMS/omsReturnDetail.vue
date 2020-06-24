@@ -21,7 +21,6 @@ export default {
         id: '', //主键值
         barCode: '', // 商品条码
         productCode: '', // 商品货号
-        returnNo: '', // 退货单号
       },
       orderReturnDetailUpdate: orderReturnDetailUpdate,
       searchOptions:[
@@ -39,41 +38,19 @@ export default {
         },
         {
           label: '商品条码:',
-          rules:[
-          {
-            required: true,
-            message: "请输入商品条码",
-            trigger: "blur"
-          }],
+          rules:[],
           prop: 'barCode',type: 'barCode',name: 'barCode',
           placeholder: '请输入商品条码',
           proptype: 'input'
         },
         {
           label: '商品货号:',
-          rules: [
-          {
-            required: true,
-            message: "请输入商品货号",
-            trigger: "blur"
-          }],
+          rules: [],
           prop: 'productCode',type: 'productCode',name: 'productCode',
           placeholder: '请输入商品货号',
           proptype: 'input'
-        },
-        {
-          label: '退货单号:',
-          rules: [
-          {
-            required: true,
-            message: "请输入退货单号",
-            trigger: "blur"
-          }],
-          prop: 'returnNo',type: 'returnNo',name: 'returnNo',
-          placeholder: '请输入退货单号',
-          proptype: 'input'
-        },
-      ],
+        }
+      ]
     }
   },
 

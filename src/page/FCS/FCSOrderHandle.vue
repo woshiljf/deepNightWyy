@@ -5,18 +5,25 @@
           <el-header height="" class="elHeader">
             <div class="searchBox" style="margin-top:10px">
               <el-row>
+                <el-col><h1 style="color: red">oms已完成单据同步恒康重试</h1></el-col>
                 <el-col>
-                  <el-form :model="listQuery" :inline="true" ref="form" size="small">
-                    <el-form-item label="宝唯订单号:"> 
-                      <el-input v-model="listQuery.orderNos" placeholder="可批量输入 以英文逗号隔开" type="textarea"></el-input>
-                    </el-form-item>
-                    <el-form-item label="售后单号:" prop="returnNos"> 
-                      <el-input v-model="listQuery.returnNos" placeholder="可批量输入 以英文逗号隔开" type="textarea"></el-input>
-                    </el-form-item>
-                  </el-form>
+                  <el-card>
+                    <el-form :model="listQuery" :inline="true" ref="form" size="small">
+                      <el-tooltip class="item" effect="dark" content="售后单号，补偿售后单时传入，可单独输入售后单号" placement="top-start">
+                        <el-form-item label="宝唯订单号:"> 
+                          <el-input v-model="listQuery.orderNos" placeholder="可批量输入 以英文逗号隔开" type="textarea"></el-input>
+                        </el-form-item>
+                      </el-tooltip>
+                      <el-tooltip class="item" effect="dark" content="宝唯订单号，补偿订单时传入，可单独输入宝唯订单号" placement="top-start">
+                        <el-form-item label="售后单号:" prop="returnNos"> 
+                          <el-input v-model="listQuery.returnNos" placeholder="可批量输入 以英文逗号隔开" type="textarea"></el-input>
+                        </el-form-item>
+                      </el-tooltip>
+                    </el-form>
+                  </el-card>
                 </el-col>
               </el-row>   
-          </div>
+            </div>
           </el-header>
           <el-main height="" class="btn" style="text-align:center">
             <div>
@@ -95,8 +102,8 @@ export default {
           }else{
             this.loginLoading.close()
             this.$message({
-              message:'刷新失败',
-              type:'warning',
+              message:'操作失败',
+              type:'error',
               duration:2000
             })
           }
@@ -119,15 +126,15 @@ export default {
 }
 </script>
 <style scoped>
-.page-bar {
-  margin-top: 20px;
-  text-align: right;
-}
-.btn{
-  margin: 0;
-}
-.box-card {
-  text-align: center;
-}
+  .page-bar {
+    margin-top: 20px;
+    text-align: right;
+  }
+  .btn{
+    margin: 0;
+  }
+  .box-card {
+    text-align: center;
+  }
 
 </style>

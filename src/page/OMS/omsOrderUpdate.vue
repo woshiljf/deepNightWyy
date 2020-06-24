@@ -17,16 +17,45 @@ export default {
   data(){
     return {
       listQuery: {
-        cancelStatus: '', // OMS订单取消状态12
-        orderStatus: '', // OMS订单状态
-        stockout: '', // 是否缺货标志
+        cancelStatus: [{
+          value: 2,
+          label: '全部取消'
+        }, {
+          value: 39,
+          label: '取消失败'
+        }], // OMS订单取消状态12
+        orderStatus: [{
+          value: 6,
+          label: '已审核'
+        }, {
+          value: 8,
+          label: '占库中'
+        },{
+          value: 40,
+          label: '已完成'
+        }, {
+          value: 32,
+          label: '已取消'
+        }], // OMS订单状态
+        stockout: [{
+          value: 0,
+          label: '否'
+        },{
+          value: 1,
+          label: '是'
+        }], // 是否缺货标志
         orderNo: '', //订单号
       },
       orderUpdate: orderUpdate,
       searchOptions:[
         {
           label: 'OMS订单号:',
-          rules: [],
+          rules: [
+          {
+          required: true,
+          message: "请输入订单号",
+          trigger: "blur"
+          }],
           prop: 'orderNo',type: 'orderNo',name: 'orderNo',
           placeholder: '请输入订单号',
           proptype: 'input'
@@ -36,21 +65,21 @@ export default {
           rules: [],
           prop: 'cancelStatus',type: 'cancelStatus',name: 'cancelStatus',
           placeholder: '请输入OMS订单取消状态',
-          proptype: 'input'
+          proptype: 'select'
         },
         {
           label: '是否缺货标志:',
           rules: [],
           prop: 'stockout',type: 'stockout',name: 'stockout',
           placeholder: '是否缺货标志',
-          proptype: 'input'
+          proptype: 'select'
         },
         {
           label: 'OMS订单状态:',
           rules: [],
           prop: 'orderStatus',type: 'orderStatus',name: 'orderStatus',
           placeholder: '请输入订单状态',
-          proptype: 'input'
+          proptype: 'select'
         }
       ],
     }

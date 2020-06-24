@@ -23,53 +23,31 @@ export default {
           label: '主键值:',
           rules: [
           {
-          required: true,
-          message: "请输入主键值",
-          trigger: "blur"
+            required: true,
+            message: "请输入主键值",
+            trigger: "blur"
           }],
           prop: 'id',type: 'id',name: 'id',
           placeholder: '请输入主键值',
           proptype: 'input'
         },
         {
-          label: 'OMS订单号:',
-          rules: [
-          {
-          required: true,
-          message: "请输入订单号",
-          trigger: "blur"
-          }],
-          prop: 'orderNo',type: 'orderNo',name: 'orderNo',
-          placeholder: '请输入订单号',
-          proptype: 'input'
-        },
-        {
           label: '任务状态:',
-          rules: [
-          {
-          required: true,
-          message: "请输入任务状态",
-          trigger: "blur"
-          }],
+          rules: [],
           prop: 'processStatus',type: 'processStatus',name: 'processStatus',
           placeholder: '请输入任务状态',
-          proptype: 'input'
+          proptype: 'select'
         },
         {
           label: '任务失败次数:',
-          rules: [
-          {
-          required: true,
-          message: "请输入任务失败次数",
-          trigger: "blur"
-          }],
+          rules: [],
           prop: 'failCount',type: 'failCount',name: 'failCount',
           placeholder: '请输入任务失败次数',
           proptype: 'input'
         },
         {
           label: '任务下次触发时间:',
-          rules: '',
+          rules: [],
           prop: '',type: '',name: 'nextExecuteTime',
           proptype: 'date'
         }
@@ -78,8 +56,12 @@ export default {
         id: '', //主键值
         failCount: '', // 任务失败次数
         nextExecuteTime: null, // 任务下次触发时间
-        processStatus: '', // 任务状态
-        orderNo: '', //订单号
+        processStatus: [
+          {value: 10, label: '待处理'},
+          {value: 20, label: '处理中'},
+          {value: 30, label: '处理成功'},
+          {value: 40, label: '任务失败'}
+        ], // 任务状态
       },
       orderStatusUpdate: orderStatusUpdate
     }

@@ -7,27 +7,30 @@
             <el-row>
               <el-col>
                 <el-form :model="searchQuery" :inline="true" ref="form" size="small">
-                  <div v-for="option in searchOptions" :key="option.label" style="display: inline-block">
-                    <el-form-item :label="option.label" :rules="option.rules" :prop="option.prop" v-if="option.proptype==='input'"> 
-                      <el-input v-model="searchQuery[option.name]" :placeholder="option.placeholder" :type="option.type"></el-input>
-                    </el-form-item>
-
-                    <el-form-item :label="option.label" :rules="option.rules" :prop="option.prop" v-if="option.proptype==='textarea'"> 
-                      <el-input v-model="searchQuery[option.name]" :placeholder="option.placeholder" :type="option.type"></el-input>
-                    </el-form-item>
-
+                  <div v-for="option in searchOptions" :key="option.label" style="display: inline-block">        
+                      <el-form-item :label="option.label" :rules="option.rules" :prop="option.prop" v-if="option.proptype==='input'"> 
+                        <el-input v-model="searchQuery[option.name]" :placeholder="option.placeholder" :type="option.type"></el-input>
+                      </el-form-item>
+                      <el-form-item :label="option.label" :rules="option.rules" :prop="option.prop" v-if="option.proptype==='select'"> 
+                        <el-select v-model="searchQuery[option.name]" :placeholder="option.placeholder">
+                          <el-option
+                            v-for="item in listQuery[option.name]"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                          </el-option>
+                        </el-select>
+                      </el-form-item>  
                     <el-form-item :label="option.label" v-if="option.proptype==='date'">
-                      <div class="block">
-                        <span style="color: red">*</span>
-                        <el-date-picker
-                          v-model="searchQuery[option.name]"
-                          type="date"
-                          placeholder="选择日期"
-                          format="yyyy 年 MM 月 dd 日"
-                          value-format="timestamp"
-                          >
-                        </el-date-picker>
-                      </div>
+                        <div class="block">
+                          <el-date-picker
+                            v-model="searchQuery[option.name]"
+                            type="datetime"
+                            placeholder="选择日期时间"
+                            value-format="timestamp"
+                            >
+                          </el-date-picker>
+                        </div>
                     </el-form-item>
                   </div>
                 </el-form>
@@ -67,8 +70,17 @@ export default {
   },
   data(){
     return {
-      searchQuery: this.listQuery,
-      loginLoading: null,
+      searchQuery: '',
+      loginLoading: null
+    }
+  },
+  created() {
+    this.searchQuery = Object.assign({},this.listQuery)
+    // 清空值
+    for (const key in this.searchQuery) {
+      if (this.searchQuery.hasOwnProperty(key)) {
+        this.searchQuery[key] = ''
+      }
     }
   },
   methods: {
@@ -83,16 +95,16 @@ export default {
     onSubmit(formName){
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          if(this.searchQuery.hasOwnProperty('nextExecuteTime')){
-            if(this.searchQuery.nextExecuteTime===null ||this.searchQuery.nextExecuteTime===''){
-              this.tick()
-              return
-            }
-          }
+          // if(this.searchQuery.hasOwnProperty('nextExecuteTime')){
+          //   if(this.searchQuery.nextExecuteTime===null ||this.searchQuery.nextExecuteTime===''){
+          //     this.tick()
+          //     return
+          //   }
+          // }
           // 获取userCode
           const userCode = JSON.parse(sessionStorage.getItem("userCode")).userCode
           // 请求参数
-          const data = Object.assign({},this.listQuery)
+          const data = Object.assign({},this.searchQuery)
           const params = {data,userCode}
           // 刷新动画
           this.loginLoading = this.$loading({
@@ -121,8 +133,8 @@ export default {
           }else{
             this.loginLoading.close()
             this.$message({
-              message:'刷新失败',
-              type:'warning',
+              message:'操作失败',
+              type:'error',
               duration:2000
             })
           }
@@ -135,9 +147,9 @@ export default {
     },
     handleReset(){
       // 清空请求搜索
-      for (const key in this.listQuery) {
-        if (this.listQuery.hasOwnProperty(key)) {
-          this.listQuery[key] = ''
+      for (const key in this.searchQuery) {
+        if (this.searchQuery.hasOwnProperty(key)) {
+          this.searchQuery[key] = ''
         }
       }
     },
