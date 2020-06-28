@@ -15,7 +15,7 @@
 import SearchBar from '../components/SearchBar'
 import searchBarOptions from '@/textResources/searchBarOptions'
 import { getNewTime } from '@/textResources/searchBarOptions'
-import moment from 'moment'
+// import moment from 'moment'
 export default {
   name: 'DeliverySearch',
   components: {
