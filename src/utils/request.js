@@ -3,6 +3,7 @@ import { Message } from 'element-ui'
 import store from '@/store'
 import { getToken, setToken } from './auth'
 import Vue from 'vue'
+import route from '../router/index.js'
 // import { pvuvChangeName, saveAuditLog } from './globalFunction/index'
 
 // 创建axios对象
@@ -84,10 +85,11 @@ service.interceptors.response.use(
       return Promise.reject(error)
     }
     if (error.response.status === 401) {
-      this.$router.push('/login')
       const code = error.response.data.errorCode ? error.response.data.errorCode : error.response.data.code
       const msg = error.response.data.errorMsg ? error.response.data.errorMsg : error.response.data.msg
       if (code === '4011005' && error.response.data.newAccessToken) {
+        console.log('Token过期')
+        route.push('/login')
         setToken(error.response.data.newAccessToken || error.response.data.token || error.response.data.data)
         store.dispatch('UpdateToken', error.response.data.newAccessToken || error.response.data.token || error.response.data.data).then(() => {
           Promise.resolve()
@@ -104,6 +106,8 @@ service.interceptors.response.use(
             duration: 2000
           })
         } else {
+          console.log('Token过期')
+          route.push('/login')
           setToken(error.response.data.data.newAccessToken || error.response.data.data.token || error.response.data.data)
           store.dispatch('UpdateToken', error.response.data.data.newAccessToken || error.response.data.data.token || error.response.data.data).then(() => {
             Promise.resolve()

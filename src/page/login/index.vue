@@ -104,7 +104,7 @@ export default {
            this.$router.push({ path: "/" })  // 去主页
            }).catch((error) => {
             if (error.response) {
-              Message({
+              this.$message({
                 message: error.response.data.errorMsg || '用户名或密码错误，登录失败',
                 type: 'error',
                 duration: 5 * 1000
@@ -112,9 +112,9 @@ export default {
             }
           }).finally(() => {
             this.logining = false
+            loginLoading.close()
           })
         }else {
-           loading.close()
           this.logining = false
           console.log('error submit!!')
           return false
