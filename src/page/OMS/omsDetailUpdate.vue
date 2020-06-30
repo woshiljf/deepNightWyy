@@ -24,6 +24,7 @@ export default {
         salePrice: '', // 平台销售价单价
       },
       orderDetailUpdate: orderDetailUpdate,
+      // 搜索框参数
       searchOptions:[
         {
           label: '主键值:',

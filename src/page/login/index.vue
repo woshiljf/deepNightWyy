@@ -88,6 +88,7 @@ export default {
             text: '登录中,请稍后。。。',
             spinner: "el-icon-loading"
             });
+          // 登录请求
           this.$store.dispatch('LoginByUsername', params).then((res) => {
            if (!getToken()) {
              this.$notify({
@@ -121,6 +122,7 @@ export default {
         }
       })
     },
+    // 密码显示
     showPwd() {
       if (this.passwordType === 'password') {
         this.passwordType = ''

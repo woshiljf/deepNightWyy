@@ -52,18 +52,21 @@
 export default {
   name: 'SearchBox',
   props:{
+    // 搜索参数
     searchOptions: {
       type: Array,
       default: function() {
         return []
       }
     },
+    // 查询参数
     listQuery: {
       type: Object,
       default: function() {
         return {}
       }
     },
+    // 订单更新函数
     orderUpdate: {
       type: Function
     }

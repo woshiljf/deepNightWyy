@@ -17,13 +17,15 @@ export default {
   data(){
     return {
       listQuery: {
+        // OMS订单取消状态12
         cancelStatus: [{
           value: 2,
           label: '全部取消'
         }, {
           value: 39,
           label: '取消失败'
-        }], // OMS订单取消状态12
+        }], 
+         // OMS订单状态
         orderStatus: [{
           value: 6,
           label: '已审核'
@@ -36,17 +38,20 @@ export default {
         }, {
           value: 32,
           label: '已取消'
-        }], // OMS订单状态
+        }],
+        // 是否缺货标志
         stockout: [{
           value: 0,
           label: '否'
         },{
           value: 1,
           label: '是'
-        }], // 是否缺货标志
+        }], 
         orderNo: '', //订单号
       },
+      // 订单更新函数
       orderUpdate: orderUpdate,
+      // 查询参数
       searchOptions:[
         {
           label: 'OMS订单号:',

@@ -87,6 +87,8 @@ service.interceptors.response.use(
     if (error.response.status === 401) {
       const code = error.response.data.errorCode ? error.response.data.errorCode : error.response.data.code
       const msg = error.response.data.errorMsg ? error.response.data.errorMsg : error.response.data.msg
+      console.log('msg' , msg)
+      route.push('/login')
       if (code === '4011005' && error.response.data.newAccessToken) {
         console.log('Token过期')
         route.push('/login')
