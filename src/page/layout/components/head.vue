@@ -1,37 +1,61 @@
 <template>
-  <div class="head">
-    <el-col :span="24" class="header">
-      <el-col :span="10" class="logo" :class="'logo-width'">
-        <el-col class="logo-img"></el-col>
-        <el-col class="logo-title">{{sysName}}</el-col>
-      </el-col>
-      <el-col :span="10" class="breadcrumb-container">
-        <el-breadcrumb separator="/" class="breadcrumb-inner">
-          <el-breadcrumb-item v-for="item in $route.matched" :key="item.path">{{ item.name }}</el-breadcrumb-item>
-        </el-breadcrumb>
-      </el-col>
-      <el-col :span="4" class="userinfo">
-        {{ sysUserName }}
-          <el-dropdown trigger="hover">
-              <span class="el-dropdown-link userinfo-inner el-icon-caret-bottom"></span>
-              <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item>我的消息</el-dropdown-item>
-                  <el-dropdown-item>设置</el-dropdown-item>
-                  <el-dropdown-item divided @click.native="logoutFun">退出登录</el-dropdown-item>
-              </el-dropdown-menu>
-          </el-dropdown>
-      </el-col>
-    </el-col>     
+  <div class="container-header">
+    <div class="header">
+      <div class="logo" :class="'logo-width'">
+        <img src="../../../assets/img/1186871.png" alt="" class="imglogo">
+        <span class="logo-title">深夜网抑云音乐</span>
+      </div>
+
+      <div class="navmenue">
+        <el-menu :default-active="activeIndex2" class="el-menu-demo" mode="horizontal" @select="handleSelect"
+          background-color="#333333" text-color="#fff" active-text-color="#ffd04b">
+          <el-menu-item index="1" @click="findMusic">
+            发现音乐
+          </el-menu-item>
+          <el-menu-item index="2" @click="myMusicHandle">我的音乐
+          </el-menu-item>
+          <el-menu-item index="3" @click="frendsHandle">朋友</el-menu-item>
+          <el-menu-item index="4" @click="shopHandle">商城</el-menu-item>
+          <el-menu-item index="5" @click="musicPersonHandle">音乐人</el-menu-item>
+          <el-menu-item index="6" @click="downLoad">深夜鬼故事</el-menu-item>
+        </el-menu>
+      </div>
+      <div>
+        <div class="search">
+          <input type="text" class="search-box" placeholder="音乐/视频/电台/用户">
+        </div>
+        <div class="user-center">
+          <el-button type="primary" round>创作者中心</el-button>
+        </div>
+      </div>
+      <div class="userinfo">
+        <img src="https://p3.music.126.net/VctqyaUP8v8WKu09zVmCEg==/18963277044391219.jpg" alt="" class="imgamure">
+        <span class="name"> {{ sysUserName }}</span>
+        <el-dropdown trigger="hover">
+          <span class="el-dropdown-link userinfo-inner el-icon-caret-bottom"></span>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item>我的主页</el-dropdown-item>
+            <el-dropdown-item>我的消息</el-dropdown-item>
+            <el-dropdown-item>我等级</el-dropdown-item>
+            <el-dropdown-item>VIP会员</el-dropdown-item>
+            <el-dropdown-item>个人设置</el-dropdown-item>
+            <el-dropdown-item>实名认证</el-dropdown-item>
+            <el-dropdown-item divided @click.native="logoutFun">退出登录</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </div>
+    </div>
+
   </div>
 </template>
 <script>
-import {mapGetters} from 'vuex'
+import { mapGetters } from 'vuex'
 export default {
   name: 'Head',
-  data() {
-    return{
-      sysName: '系统管理',
-      sysUserName: '' ,
+  data () {
+    return {
+      sysName: '网抑云音乐',
+      sysUserName: '',
       treeArry: [],
       arry: []
     }
@@ -39,7 +63,7 @@ export default {
   computed: {
     ...mapGetters(["username", "password", "treeData"])
   },
-  mounted() {
+  mounted () {
     var user = sessionStorage.getItem("user");
     if (user) {
       user = JSON.parse(user);
@@ -47,23 +71,41 @@ export default {
     }
   },
   methods: {
-    logoutFun: function() {
+    logoutFun: function () {
       var _this = this
       this.$confirm("确认退出吗?", "提示", {
         type: 'warning'
       })
         .then(() => {
-          this.$store.dispatch('LogOut').then(()=>{
+          this.$store.dispatch('LogOut').then(() => {
             sessionStorage.removeItem("user")
             _this.$router.push("/login")
-          // 退出清空router
+            // 退出清空router
             this.$store.commit('clearRouters')
           })
         })
-        .catch(() => {})
+        .catch(() => { })
     },
+    myMusicHandle () {
+      this.$router.push({ path: '/mymusic' })
+    },
+    findMusic () {
+      this.$router.push({ path: '/' })
+    },
+    frendsHandle () {
+      this.$router.push({ path: '/myfrends' })
+    },
+    shopHandle () {
+      this.$router.push({ path: '/shopcity' })
+    },
+    musicPersonHandle () {
+      this.$router.push({ path: '/musicPerson' })
+    },
+    downLoad () {
+
+    }
   },
-  created() {
+  created () {
     if (this.userName) {
       this.sysUserName = this.userName
     } else {
@@ -72,145 +114,78 @@ export default {
   },
 }
 </script>
-<style scoped lang="scss">
-@import "../../../assets/css/them.scss";
-.container {
-  position: absolute;
-  top: 0;
-  bottom: 0;
+<style scoped>
+.container-header {
+  height: 70px;
   width: 100%;
-  .header {
-    height: 50px;
-    line-height: 50px;
-    background: $globalColor;
-    color: #fff;
-    .userinfo {
-      text-align: right;
-      padding-right: 35px;
-      float: right;
-      .userinfo-inner {
-        cursor: pointer;
-        color: #fff;
-      }
-    }
-    .logo {
-      height: 50px;
-      font-size: 22px;
-      padding-left: 20px;
-      border-color: $borderColor;
-      border-right-width: 1px;
-      border-right-style: solid;
-    }
-    .logo-width {
-      text-align: right;
-      width: 180px;
-      color: $baseColor;
-      .logo-img {
-        display: inline-block;
-        width: 40px;
-        height: 40px;
-        margin-top: 5px;
-        background-image: url("../../../assets/img/element-ui.svg");
-        background-size: cover;
-      }
-      .logo-title {
-        display: inline-block;
-        line-height: 50px;
-        width: 100px;
-        height: 50px;
-      }
-    }
-    .logo-collapse-width {
-      width: 60px;
-    }
-    .tools {
-      padding: 0 23px;
-      width: 14px;
-      height: 60px;
-      line-height: 60px;
-      cursor: pointer;
-    }
-  }
-  .main {
-    display: flex;
-    position: absolute;
-    top: 50px;
-    bottom: 0;
-    overflow: hidden;
-    aside {
-      flex: 0 0 230px;
-      width: 230px;
-      .el-menu {
-        height: 100%;
-      }
-      .collapsed {
-        width: 60px;
-        background: $globalColor;
-        .item {
-          position: relative;
-        }
-        .submenu {
-          position: absolute;
-          top: 0;
-          left: 60px;
-          z-index: 99999;
-          height: auto;
-          display: none;
-        }
-      }
-    }
-    .menu-collapsed {
-      flex: 0 0 60px;
-      width: 60px;
-    }
-    .menu-expanded {
-      flex: 0 0 180px;
-      width: 230px;
-    }
-    .single-menu {
-      height: 40px;
-      line-height: 40px;
-      padding-left: 45px;
-      color: #fff;
-      background-color: $baseColor;
-    }
-    .content-container {
-      flex: 1;
-      overflow-y: scroll;
-      padding: 20px;
-      .nav-tabs {
-        font-size: 12px;
-        border-bottom: 1px solid #e4e7ed;
-        .cus-tab-box {
-          display: inline-block;
-          margin: 5px 0px 5px 5px;
-          padding: 3px 10px;
-          border: 1px solid #ccc;
-          border-radius: 2px;
-          cursor: pointer;
-        }
-        .activeTab {
-          background-color: $baseColor;
-          color: #fff;
-          border-color: #fff;
-        }
-        .close-icon {
-          transform: rotate(0deg);
-          transition: transform 1s;
-        }
-        .close-icon:hover {
-          transform: rotate(180deg);
-        }
-      }
-      .content-wrapper {
-        background-color: #fff;
-        box-sizing: border-box;
-      }
-    }
-  }
-  .breadcrumb-container {
-    margin-top: 20px;
-    margin-left: 20px;
-  }
+  background-color: #333;
+  position: relative;
+  text-align: center;
+  line-height: 70px;
+  overflow: auto;
+}
+.header {
+  /* width: 1000px; */
+  /* overflow: auto; */
+}
+.logo {
+  position: absolute;
+  left: 50px;
+}
+.imglogo {
+  width: 55px;
+  vertical-align: middle;
+}
+.imgamure {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  vertical-align: middle;
+}
+.navmenue {
+  position: absolute;
+  left: 350px;
+  /* width: 100%; */
+}
+.logo-title {
+  font-size: 20px;
+  color: aliceblue;
+}
+.search {
+  position: absolute;
+  left: 900px;
+}
+.search-box {
+  width: 200px;
+  height: 45px;
+  border-radius: 25px;
+  padding-left: 25px;
+  outline: none;
+}
+.userinfo {
+  position: absolute;
+  left: 90%;
+  color: #fff;
+}
+.user-center {
+  position: absolute;
+  left: 1120px;
+}
+.el-button--primary {
+  color: #fff;
+  background-color: #333;
+  border-color: #ccc;
+}
+.el-menu.el-menu--horizontal {
+  border-bottom: none;
+}
+.el-menu--horizontal > .el-menu-item {
+  float: left;
+  height: 70px;
+  line-height: 70px;
+}
+.el-menu--horizontal > .el-submenu .el-submenu__title {
+  height: 70px;
+  line-height: 70px;
 }
 </style>

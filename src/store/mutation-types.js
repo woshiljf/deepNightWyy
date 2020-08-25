@@ -7,3 +7,4 @@ export const SET_TOKEN = 'SET_TOKEN'
 
 
 export const SET_TABDATA = 'SET_TABDATA'
+export const SET_PLAYSTATS = 'SET_PLAYSTATS'

@@ -1,27 +1,30 @@
 <template>
   <div class="login-box">
     <div class="login-page-container bounceToDown">
-      <el-form
-        :model="ruleForm2"
-        :rules="rules2"
-        ref="ruleForm2"
-        label-position="left"
-        label-width="0px"
-        class="demo-ruleForm login-container"
-      >
-        <h3 class="title">系统登录</h3>
+      <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-position="left" label-width="0px"
+        class="demo-ruleForm login-container">
+        <h1 class="title" style="color: #ffffff;padding-left: 130px">深夜网抑云</h1>
         <el-form-item prop="account">
           <!-- el-icon-user-solid -->
-          <el-input type="text" v-model="ruleForm2.account" placeholder="请输入用户名" autocomplete="on" />
+          <label for="phone">
+            <span style="color: #ffffff">手机号:</span>
+            <el-input type="text" v-model="ruleForm2.account" placeholder="请输入用户名" autocomplete="on" id="phone" />
             <span class="show-pwd">
               <i class="el-icon-user-solid" />
             </span>
+          </label>
         </el-form-item>
         <el-form-item prop="checkPass">
-          <el-input :type="passwordType" v-model="ruleForm2.checkPass" autocomplete="on" placeholder="请输入密码" @keyup.enter.native="login"/>
+
+          <label for="pwd">
+            <span style="color: #ffffff">密码：</span>
+            <el-input :type="passwordType" v-model="ruleForm2.checkPass" autocomplete="on" placeholder="请输入密码"
+              @keyup.enter.native="login" id="pwd" />
             <span class="show-pwd" @click="showPwd">
               <i :class="passwordType === 'password' ? 'el-icon-view' : 'el-icon-view'" />
             </span>
+          </label>
+
         </el-form-item>
         <el-checkbox click="remberuser" v-model="checked" checked class="remember">记住密码</el-checkbox>
         <el-form-item style="width:100%;">
@@ -40,7 +43,7 @@ import { getToken } from '@/utils/auth'
 import { Message } from 'element-ui'
 export default {
   props: {},
-  data() {
+  data () {
     return {
       logining: false,
       ruleForm2: {
@@ -67,7 +70,7 @@ export default {
       checked: true
     };
   },
-  created() {
+  created () {
     this.ruleForm2.checkPass = "";
     if (localStorage.getItem('userName')) {  // 记住密码操作
       this.ruleForm2.account = localStorage.getItem('userName');
@@ -75,9 +78,10 @@ export default {
     }
   },
   methods: {
-    login() {
+    login () {
       this.$refs.ruleForm2.validate(valid => {
         if (valid) {
+          console.log('登录了吗');
           this.logining = true
           const params = {
             userCode: this.ruleForm2.account,
@@ -87,23 +91,24 @@ export default {
             lock: true,
             text: '登录中,请稍后。。。',
             spinner: "el-icon-loading"
-            });
+          });
           // 登录请求
           this.$store.dispatch('LoginByUsername', params).then((res) => {
-           if (!getToken()) {
-             this.$notify({
-               title: '登录失败',
-               message: '登录失败',
-               type: 'error',
-               duration: 2000
-             })
-             loginLoading.close()
-             return
-           }
-           this.logining = false
-           loginLoading.close()
-           this.$router.push({ path: "/" })  // 去主页
-           }).catch((error) => {
+            if (!getToken()) {
+              this.$notify({
+                title: '登录失败',
+                message: '登录失败',
+                type: 'error',
+                duration: 2000
+              })
+              loginLoading.close()
+              return
+            }
+            this.logining = false
+            loginLoading.close()
+            this.$router.push({ path: "/" })  // 去主页
+          }).catch((error) => {
+            console.log(error)
             if (error.response) {
               this.$message({
                 message: error.response.data.errorMsg || '用户名或密码错误，登录失败',
@@ -115,7 +120,7 @@ export default {
             this.logining = false
             loginLoading.close()
           })
-        }else {
+        } else {
           this.logining = false
           console.log('error submit!!')
           return false
@@ -123,7 +128,7 @@ export default {
       })
     },
     // 密码显示
-    showPwd() {
+    showPwd () {
       if (this.passwordType === 'password') {
         this.passwordType = ''
       } else {
@@ -150,20 +155,20 @@ export default {
   -moz-border-radius: 5px;
   background-clip: padding-box;
   margin: 180px auto;
-  width: 350px;
+  width: 500px;
   padding: 35px 35px 15px;
-  background: #fff;
+  background: #333;
   border: 1px solid #eaeaea;
-  box-shadow: 0 0 25px #cac6c6;
+  // box-shadow: 0 0 25px #cac6c6;
 }
 .show-pwd {
-    position: absolute;
-    right: 10px;
-    top: 0px;
-    font-size: 16px;
-    color: #889aa4;
-    cursor: pointer;
-    user-select: none;
+  position: absolute;
+  right: 10px;
+  top: 40px;
+  font-size: 16px;
+  color: #889aa4;
+  cursor: pointer;
+  user-select: none;
 }
 
 label.el-checkbox.remember {
@@ -172,36 +177,36 @@ label.el-checkbox.remember {
 .bounceToDown {
   animation: myfirst 1s;
 }
-@keyframes myfirst
-{
-0%, 60%, 75%, 90%, 100% {
-    -webkit-animation-timing-function: cubic-bezier(.215,.61,.355,1);
-    animation-timing-function: cubic-bezier(.215,.61,.355,1);
-}
-0% {
+@keyframes myfirst {
+  0%,
+  60%,
+  75%,
+  90%,
+  100% {
+    -webkit-animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+    animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+  }
+  0% {
     opacity: 0;
-    -webkit-transform: translate3d(0,-3000px,0);
-    transform: translate3d(0,-3000px,0);
-}
-60% {
+    -webkit-transform: translate3d(0, -3000px, 0);
+    transform: translate3d(0, -3000px, 0);
+  }
+  60% {
     opacity: 1;
-    -webkit-transform: translate3d(0,25px,0);
-    transform: translate3d(0,25px,0);
-}
-75% {
-    -webkit-transform: translate3d(0,-10px,0);
-    transform: translate3d(0,-10px,0);
-}
-90% {
-    -webkit-transform: translate3d(0,5px,0);
-    transform: translate3d(0,5px,0);
-}
-100% {
+    -webkit-transform: translate3d(0, 25px, 0);
+    transform: translate3d(0, 25px, 0);
+  }
+  75% {
+    -webkit-transform: translate3d(0, -10px, 0);
+    transform: translate3d(0, -10px, 0);
+  }
+  90% {
+    -webkit-transform: translate3d(0, 5px, 0);
+    transform: translate3d(0, 5px, 0);
+  }
+  100% {
     -webkit-transform: none;
     transform: none;
+  }
 }
-}
-
-
-
 </style>

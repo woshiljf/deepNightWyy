@@ -1,18 +1,27 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
-import common from './modules/common';
-import tagsRoute from './modules/tagsRoute'
-import user from './modules/user'
-import {getters} from './getters'
+import Vue from "vue";
+import Vuex from "vuex";
+import common from "./modules/common";
+import tagsRoute from "./modules/tagsRoute";
+import user from "./modules/user";
+
+import { getters } from "./getters";
+
+import myTest from "./modules/myTest";
+
 Vue.use(Vuex);
 
 const store = new Vuex.Store({
-  modules: {
-      common,
-      tagsRoute,
-      user
-  },
-  getters
+    state: {
+        myName: "小猪佩奇"
+    },
+
+    modules: {
+        common,
+        tagsRoute,
+        user,
+        myTest
+    },
+    getters
 });
 
-export default store
+export default store;
