@@ -26,7 +26,7 @@
       </div>
       <div>
 
-        <div class="songsList">
+        <div class="songsList" v-loading="tableloading">
           <div>
             <span>歌曲列表</span>
             <span>播放次数</span>
@@ -62,14 +62,15 @@
 </template>
 
 <script>
-import { nowListenMusic } from '../../api/listenSing'
+import { get } from '../../utils/request'
 export default {
 
   data () {
     return {
       singInformation: '',
       index: '',
-      drawer: false
+      drawer: false,
+      flag: true
     }
   },
   props: {
@@ -102,6 +103,12 @@ export default {
       default: () => {
         return ''
       }
+    },
+    tableloading: {
+      type: Boolean,
+      default: () => {
+        return false
+      }
     }
   },
   methods: {
@@ -109,28 +116,53 @@ export default {
       return index * 1;
     },
     handleEdit (index, row) {
-
       this.index = index
-      nowListenMusic(row.id).then(response => {
-
+      var params = {
+        id: row.id
+      }
+      // 修改当前的播放歌曲id
+      this.$store.commit('changeNowPlayId', row.id)
+      console.log('dahaigou', this.datalist);
+      get('api/song/url', params).then(res => {
         this.index = ''
-
-        console.log('大海沟', response);
-
-
+        var url = res.data.data[0].url
+        console.log('dahai', url);
+        if (url !== null) {
+          this.$store.commit('changePlayurl', url)
+        } else {
+          this.$message({
+            message: '穷人听不起，要会员的。。。',
+            type: 'warning'
+          });
+        }
       }).catch(e => {
-
         console.log(e);
+      }).finally(e => {
+
       })
+
+      if (this.flag) {
+        var temp = []
+        this.datalist.forEach(item => temp.push(item.id))
+        this.$store.commit('changePlayList', temp)
+        this.flag = false
+      }
+
+
+
+
+
     },
     playHandle () {
       console.log('播放歌曲');
       console.log(this.$store.state.common.playStats);
       this.$store.commit('SET_PLAYSTATS', true)
-      // setTimeout(() => {
-      //   this.$store.commit('SET_PLAYSTATS', false)
-      // }, 2000)
-
+    }
+  },
+  watch: {
+    datalist: function () {
+      console.log('datalist改变了')
+      this.flag = true
     }
   },
   mounted () {

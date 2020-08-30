@@ -1,62 +1,45 @@
 <template>
-  <div
-    id="app"
-    @mousemove="moveEvent"
-    @click="moveEvent"
-    @mouseenter="browerPlayEnter"
-  >
+  <div id="app" @mousemove="moveEvent" @click="moveEvent" @mouseenter="browerPlayEnter">
     <router-view></router-view>
-
-    <div class="playMusic" @mousemove="playMove" v-if="flase">
-      <el-drawer
-        title="我是标题"
-        :visible.sync="playStats"
-        :with-header="false"
-        direction="btt"
-        :modal="false"
-        :modal-append-to-body="false"
-        size="10%"
-      >
-        <div class="btn-audio">
-          <audio id="mp3Btn" controls>
-            <source
-              src="http://m7.music.126.net/20200819230302/58ddb369275707d676c5dd952630238f/ymusic/0fd6/4f65/43ed/a8772889f38dfcb91c04da915b301617.mp3"
-              type="audio/mpeg"
-            />
-          </audio>
-        </div>
-      </el-drawer>
-    </div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapState } from "vuex";
 
 export default {
   name: "App",
-  data() {
+  data () {
     return {
       isRouterAlive: true,
       timmer: null,
-      playStats: playStats,
       timeId: null,
+
     };
   },
-  created() {
+  created () {
     this.moveEvent();
+
   },
+  mounted () {
+    console.log(this.mesg, '大海');
+  },
+
   computed: {
-    ...mapGetters(["playStats"]),
+    ...mapState({
+      nowplayurl: state => state.myTest.playurl
+    })
   },
+
+
   methods: {
-    reload() {
+    reload () {
       this.isRouterAlive = false;
       this.$nextTick(function () {
         this.isRouterAlive = true;
       });
     },
-    moveEvent() {
+    moveEvent () {
       // 只要鼠标在页面活动，清除计时器，重新计时
       const path = ["/login"];
       if (document.URL.indexOf(path) === -1) {
@@ -65,7 +48,7 @@ export default {
         this.init();
       }
     },
-    init() {
+    init () {
       this.timmer = setTimeout(() => {
         // 清除session
         sessionStorage.removeItem("sessionData");
@@ -84,27 +67,27 @@ export default {
         });
       }, 1000 * 60 * 30); // 设置半小时返回登录页
     },
-    handleClose(done) {
+    handleClose (done) {
       this.$confirm("确认关闭？")
         .then((_) => {
           this.$store.commit("SET_PLAYSTATS", false);
 
           done();
         })
-        .catch((_) => {});
+        .catch((_) => { });
     },
-    playMove() {
+    playMove () {
       clearTimeout(this.timeId);
       this.$store.commit("SET_PLAYSTATS", true);
       this.startTime();
     },
-    startTime() {
+    startTime () {
       this.timeId = setTimeout(() => {
         this.$store.commit("SET_PLAYSTATS", false);
       }, 1000);
     },
 
-    browerPlayEnter() {
+    browerPlayEnter () {
       this.$store.commit("SET_PLAYSTATS", true);
     },
   },
@@ -121,7 +104,20 @@ body {
   -webkit-font-smoothing: antialiased;
   overflow: auto;
 }
-
+.playBar {
+  width: 100%;
+  height: 80px;
+  background-color: #333;
+  position: fixed;
+  bottom: 0;
+  padding-top: 10px;
+  line-height: 80px;
+  text-align: center;
+  z-index: 1000;
+}
+.btnPlay {
+  background-color: #fff;
+}
 #app {
   position: absolute;
   top: 0;

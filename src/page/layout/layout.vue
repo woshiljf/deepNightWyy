@@ -3,6 +3,7 @@
   <el-row class="container">
     <head-bar />
     <content-main />
+    <foot-bar/>
  </el-row>
 <!-- <foot-bar v-if="playStats" :playmuisc="playStats" /> -->
 </div>

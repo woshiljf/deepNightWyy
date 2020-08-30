@@ -2,7 +2,10 @@ const MyTest = {
     state: {
         nums: 0,
         name: "小狗",
-        love: "篮球"
+        love: "篮球",
+        playurl: "http://m8.music.126.net/20200830213101/3acc769cba210215a27b792c4dff24b3/ymusic/d260/bf6e/c45c/fe975bd2f2ee1c1de9c60b362121caed.mp3",
+        playList: [],
+        nowPlayId: 0
     },
 
     // mutations 主要的作用是对state的状态进行修改的,不能直接修改state的属性值
@@ -17,6 +20,15 @@ const MyTest = {
 
         changeLove(state, love) {
             state.love = love;
+        },
+        changePlayurl(state, url) {
+            state.playurl = url;
+        },
+        changePlayList(state, list) {
+            state.playList = list;
+        },
+        changeNowPlayId(state, id) {
+            state.nowPlayId = id;
         }
     },
     // 主要处理一些异步请求，请求回来的数据，重新改变state的属性，在经过mutations来改变

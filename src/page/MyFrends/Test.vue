@@ -2,10 +2,12 @@
   <div class="box">
     <h1>我是一个BOX+==={{value}}</h1>
     <button @click="fn">点我</button>
+
   </div>
 </template>
 
 <script>
+import { get } from '../../utils/request'
 export default {
   data () {
     return {
@@ -32,8 +34,18 @@ export default {
   },
   methods: {
     fn () {
-      console.log('我');
-      this.value = '子组件改变了值'
+
+      var params = {
+        id: 156128
+      }
+      get('api/song/url', params).then(res => {
+
+        console.log(res);
+
+
+      })
+
+
     },
 
 

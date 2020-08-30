@@ -1,32 +1,26 @@
 <template>
   <div class="container-header">
-    <div class="header">
-      <div class="logo" :class="'logo-width'">
-        <img src="../../../assets/img/1186871.png" alt="" class="imglogo">
-        <span class="logo-title">网抑云音乐</span>
+
+    <div class="playBar">
+      <div class="preplay">
+        <el-button type="primary" @click="playPre">上一曲</el-button>
       </div>
-      <div class="navmenue">
-
-        <el-drawer title="我是标题" :visible="playmuisc" :with-header="false" direction='btt'>
-          <span>我来啦!</span>
-          <div class="btn-audio">
-            <audio id="mp3Btn" controls>
-              <source
-                src="http://m7.music.126.net/20200819230302/58ddb369275707d676c5dd952630238f/ymusic/0fd6/4f65/43ed/a8772889f38dfcb91c04da915b301617.mp3"
-                type="audio/mpeg" />
-            </audio>
-          </div>
-
-        </el-drawer>
+      <div class="playaudio">
+        <audio :src="nowplayurl" controls="controls" class="btnPlay audio" autoplay ref="audio"
+          @ended.native="playPause()" loop>
+          Your browser does not support the audio element.
+        </audio>
       </div>
-
+      <div class="nextplay">
+        <el-button type="primary" @click="playNext">下一曲</el-button>
+      </div>
     </div>
 
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex'
-// import Audio from '../../../components/audio'
+import { get } from '../../../utils/request'
+import { mapGetters, mapState } from "vuex";
 export default {
   name: 'Head',
   components: {
@@ -35,10 +29,8 @@ export default {
   data () {
     return {
       sysName: '网抑云音乐',
-      sysUserName: '',
-      treeArry: [],
-      arry: [],
-      drawer: false
+      flag: true,
+      params: { id: 0 },
     }
   },
   props: {
@@ -50,103 +42,111 @@ export default {
 
 
   },
+
   computed: {
-    ...mapGetters(["username", "password", "treeData"])
+    ...mapState({
+      nowplayurl: state => state.myTest.playurl
+    })
   },
   mounted () {
 
   },
   methods: {
+    playPause () {
+      console.log('播放结束')
+    },
+    // 播放下一首
+    playNext () {
+      // 获取当前歌单的播放列表
+      this.getPlayId(1)
+      //播放歌曲
+      this.nowPlayMuisc()
+    },
+    // 播放上一首
+    playPre () {
+      if (this.getPlayId(-1)) {
+        this.nowPlayMuisc()
 
+      }
+      //播放歌曲
+    },
+    getPlayId (p) {
+      var dataList = this.$store.state.myTest.playList
+      // 获取当前播放的歌曲id
+      var dataListLength = dataList
+      var nowPlayId = this.$store.state.myTest.nowPlayId
+
+      var index = dataList.indexOf(nowPlayId)  //得到当前的播放index
+      console.log('index', index);
+      if (index > dataListLength) {
+        this.$message({
+          message: '到头了哥。。。',
+          type: 'warning'
+        })
+        return false
+      } else if (index <= 1) {
+        this.$message({
+          message: '到顶了哥。。。',
+          type: 'warning'
+        })
+        return false
+      }
+      this.params.id = dataList[index + p]
+      this.$store.commit('changeNowPlayId', this.params.id)
+      return true
+    },
+    //获取音乐播放链接
+    nowPlayMuisc () {
+      get('api/song/url', this.params).then(res => {
+        this.index = ''
+        var url = res.data.data[0].url
+        if (url !== null) {
+          this.$store.commit('changePlayurl', url)
+        } else {
+          this.$message({
+            message: '穷人听不起，要会员的。。。',
+            type: 'warning'
+          });
+        }
+      }).catch(e => {
+        console.log(e);
+      }).finally(e => {
+        this.$store.commit('changeNowPlayId', this.params.id)
+      })
+    }
 
   },
-  created () {
 
-  },
+
+
 }
 </script>
 <style scoped>
 .container-header {
-  height: 70px;
+  margin: 0;
+  padding: 0;
+}
+.playBar {
   width: 100%;
+  height: 80px;
   background-color: #333;
-  position: relative;
-  text-align: center;
-  line-height: 70px;
-  overflow: auto;
-  z-index: 1000;
   position: fixed;
   bottom: 0;
+  padding: 0;
+  line-height: 80px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  z-index: 1000;
+  align-items: center;
 }
-.header {
-  /* width: 1000px; */
-  /* overflow: auto; */
+.btnPlay {
+  background-color: #fff;
+  display: inline-block;
+  margin: 5px 10px;
 }
-.logo {
-  position: absolute;
-  left: 50px;
-}
-.imglogo {
-  width: 55px;
-  vertical-align: middle;
-}
-.imgamure {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  vertical-align: middle;
-}
-.navmenue {
-  position: absolute;
-  left: 350px;
-  /* width: 100%; */
-}
-.logo-title {
-  font-size: 20px;
-  color: aliceblue;
-}
-.search {
-  position: absolute;
-  left: 900px;
-}
-.search-box {
-  width: 200px;
-  height: 45px;
-  border-radius: 25px;
-  padding-left: 25px;
-  outline: none;
-}
-.userinfo {
-  position: absolute;
-  left: 90%;
-  color: #fff;
-}
-.user-center {
-  position: absolute;
-  left: 1120px;
-}
-.el-button--primary {
-  color: #fff;
-  background-color: #333;
-  border-color: #ccc;
-}
-.el-menu.el-menu--horizontal {
-  border-bottom: none;
-}
-.el-menu--horizontal > .el-menu-item {
-  float: left;
-  height: 70px;
-  line-height: 70px;
-}
-.el-menu--horizontal > .el-submenu .el-submenu__title {
-  height: 70px;
-  line-height: 70px;
-}
-.myaudio {
-  /* background-color: #333; */
-}
-.btn-audio {
-  width: 186px;
-  height: 186px;
+.playaudio {
+  margin: 0 10px;
+  padding-top: 35px;
 }
 </style>

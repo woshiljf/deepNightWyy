@@ -35,12 +35,12 @@
 
           <!-- <button @click="testClick">点我一下</button> -->
           <keep-alive>
-            <songs-detail :datalist="dataSongs" :id="sonsId" v-loading="loading" :img-url="coverImg"
-              :songs-description="songsDescription" :songs-title="songsname" v-if="status.songs">
+            <songs-detail :datalist="dataSongs" :id="sonsId" :img-url="coverImg" :songs-description="songsDescription"
+              :songs-title="songsname" v-if="status.songs" class="songs-detail">
             </songs-detail>
-            <collect-singers :collectsingers="mycollectsingers" v-if="status.singers" v-loading="loading">
+            <collect-singers :collectsingers="mycollectsingers" v-if="status.singers">
             </collect-singers>
-            <my-vedio :collectvedio="likeVedio" v-if="status.mv" v-loading="loading"></my-vedio>
+            <my-vedio :collectvedio="likeVedio" v-if="status.mv"></my-vedio>
           </keep-alive>
 
         </el-main>
@@ -62,6 +62,8 @@ import SongsDetail from './songsDetail'
 import CollectSingers from './collectSinger'
 import MyVedio from './myVideo'
 import { getSonsSheet } from '../../api/getSongsSheet'
+
+import { Loading } from 'element-ui'
 
 export default {
   components: {
@@ -132,18 +134,23 @@ export default {
 
         }
       }
+
+      this.loading = this.openLoading()
       this.status.songs = true
       this.sonsId = id
-      this.loading = true
+      // this.loading = true
       getSonsSheet(id).then(response => {
-        this.loading = false
+        // this.loading = false
+        this.loading.close()
         var dataSongs = response.data.playlist.tracks
         this.coverImg = img
         this.songsDescription = description
         this.songsname = name
         this.show(dataSongs)
       }).catch((e) => {
-        this.loading = false
+        // this.loading = false
+        this.loading.close()
+
       })
     },
     show (data) {
@@ -169,15 +176,16 @@ export default {
       }
       this.status.singers = true
 
-      this.loading = true
+      this.loading = this.openLoading()
+
       getSingers().then(response => {
-        this.loading = false
+        this.loading.close()
         console.log('歌手', response.data);
         this.mycollectsingers = response.data.data
 
 
       }).catch(e => {
-        this.loading = false
+        this.loading.close()
       })
     },
     getVedio () {
@@ -188,14 +196,15 @@ export default {
         }
       }
       this.status.mv = true
-      this.loading = true
+      this.loading = this.openLoading()
+
       getMyVedio().then(response => {
-        this.loading = false
+        this.loading.close()
         this.likeVedio = response.data.data
 
 
       }).catch(e => {
-        this.loading = false
+        this.loading.close()
       })
 
     },
@@ -204,6 +213,13 @@ export default {
       getMvUrl(id).then(res => {
         console.log('我的Mv', res);
       })
+    },
+    openLoading () {
+      return Loading.service({
+        text: '正在加载',
+        target: document.querySelector('.songs-detail')
+      })
+
     }
   }
 }
