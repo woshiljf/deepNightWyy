@@ -45,6 +45,11 @@
                 </template>
               </el-table-column>
               <el-table-column prop="title" label="歌曲标题" width="180">
+                <template slot-scope="scope">
+                  <router-link :to="{ name: 'singInfo', params: { id: scope.row.id}}">
+                    <span>{{scope.row.title}}</span>
+                  </router-link>
+                </template>
               </el-table-column>
               <el-table-column prop="time" label="时长" width="180">
               </el-table-column>
@@ -159,6 +164,18 @@ export default {
     playHandle () {
       this.$store.commit('SET_PLAYSTATS', true)
     },
+    playSing () {
+      console.log('合作')
+    },
+    checkSingDetail (singId) {
+
+      console.log('歌曲id', singId);
+      this.$router.push({
+        path: '/playsing',
+        query: { id: singId }
+      })
+
+    }
   },
   watch: {
     datalist: function () {
