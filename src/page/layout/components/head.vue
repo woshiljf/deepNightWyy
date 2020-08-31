@@ -57,7 +57,8 @@ export default {
       sysName: '网抑云音乐',
       sysUserName: '',
       treeArry: [],
-      arry: []
+      arry: [],
+      activeIndex2: '1'
     }
   },
   computed: {
@@ -103,6 +104,9 @@ export default {
     },
     downLoad () {
 
+    },
+    handleSelect () {
+      console.log('handleSelect');
     }
   },
   created () {

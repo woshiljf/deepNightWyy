@@ -34,8 +34,6 @@ export default {
   },
   mounted () {
     //首次添加router
-    this.activepath = this.$router.history.current.path
-    this.addRouters(this.$router.history.current)
   },
   methods: {
 

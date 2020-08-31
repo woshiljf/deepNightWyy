@@ -1,3 +1,19 @@
+
+Skip to content
+Pull requests
+Issues
+Marketplace
+Explore
+@woshiljf
+woshiljf /
+deepNightWyy
+
+1
+1
+
+    0
+
+Code
 <template>
   <div class="dashboard">
     <el-container class="dash-container">
@@ -83,11 +99,8 @@
 </template>
 <script>
 import imgurl from '../../../static/lunbotu.json'
-
 import { getHomePage } from '../../api/homepage'
-
 import { getuserplaylist } from '../../api/userlikesings'
-
 export default {
   data () {
     return {
@@ -99,7 +112,6 @@ export default {
     }
   },
   created () {
-
     this.getHomeInfor()
     var user = sessionStorage.getItem("userId");
     if (user) {
@@ -107,30 +119,21 @@ export default {
       this.userId = user.userId || "";
     }
     this.getplaylist(this.userId)
-
   },
   methods: {
-
     getHomeInfor () {
       getHomePage().then(res => {
-
-
         this.singinfo = res.data.data.blocks
         this.creatives = res.data.data.blocks[0].creatives
         this.styleSuggestion = res.data.data.blocks[2]
         console.log(this.creatives);
-
-
       }).catch(e => {
-
       })
-
     },
     // 获取歌单列表
     getplaylist (userId) {
       // console.log('dahaigou');
       var dataPlayList = sessionStorage.getItem("dataList")
-
       if (dataPlayList) {
         return
       } else {
@@ -140,7 +143,6 @@ export default {
         })
       }
     },
-
   }
 }
 </script>
@@ -193,3 +195,4 @@ export default {
 .el-card {
 }
 </style>
+

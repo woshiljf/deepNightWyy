@@ -5,7 +5,7 @@
     <content-main />
     <foot-bar/>
  </el-row>
-<!-- <foot-bar v-if="playStats" :playmuisc="playStats" /> -->
+
 </div>
 </template>
 <script>
@@ -22,17 +22,14 @@ export default {
   },
   data () {
     return {
-      playStats: playStats
+
     }
   },
   created () {
     // 获取useCode
     // this.getUserCode()
   },
-  computed: {
-    ...mapGetters(["playStats"])
 
-  },
   methods: {
     handleClose (done) {
       this.$confirm('确认关闭？')

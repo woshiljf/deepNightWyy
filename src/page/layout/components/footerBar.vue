@@ -1,7 +1,7 @@
 <template>
   <div class="container-header">
 
-    <div class="playBar">
+    <div class="playBar" v-show="showOrHidden">
       <div class="preplay">
         <el-button type="primary" @click="playPre">上一曲</el-button>
       </div>
@@ -13,7 +13,10 @@
       </div>
       <div class="nextplay">
         <el-button type="primary" @click="playNext">下一曲</el-button>
+        <el-button type="primary" @click="playbarHandle">隐藏</el-button>
+
       </div>
+
     </div>
 
   </div>
@@ -30,6 +33,7 @@ export default {
     return {
       sysName: '网抑云音乐',
       flag: true,
+      playbar: true,
       params: { id: 0 },
     }
   },
@@ -45,7 +49,9 @@ export default {
 
   computed: {
     ...mapState({
-      nowplayurl: state => state.myTest.playurl
+      nowplayurl: state => state.myTest.playurl,
+      playIndex: state => state.myTest.playButtonIndex,
+      showOrHidden: state => state.myTest.playbarshowOrHidden,
     })
   },
   mounted () {
@@ -55,16 +61,23 @@ export default {
     playPause () {
       console.log('播放结束')
     },
+    playbarHandle () {
+      this.$store.commit('changeShowOrHidden', false)
+    },
     // 播放下一首
     playNext () {
       // 获取当前歌单的播放列表
       this.getPlayId(1)
       //播放歌曲
+      var playI = this.playIndex
+      this.$store.commit('changePlayButtonIndex', playI + 1)
       this.nowPlayMuisc()
     },
     // 播放上一首
     playPre () {
       if (this.getPlayId(-1)) {
+        var playI = this.playIndex
+        this.$store.commit('changePlayButtonIndex', playI - 1)
         this.nowPlayMuisc()
 
       }
@@ -72,28 +85,29 @@ export default {
     },
     getPlayId (p) {
       var dataList = this.$store.state.myTest.playList
-      // 获取当前播放的歌曲id
-      var dataListLength = dataList
+
       var nowPlayId = this.$store.state.myTest.nowPlayId
 
       var index = dataList.indexOf(nowPlayId)  //得到当前的播放index
-      console.log('index', index);
-      if (index > dataListLength) {
+      if (index + p <= dataList.length - 1 && index + p >= 0) {
+        console.log('index-p', index + p);
+        this.params.id = dataList[index + p]
+        this.$store.commit('changeNowPlayId', this.params.id)
+        return true
+      } else if (index + p > dataList.length) {
         this.$message({
           message: '到头了哥。。。',
           type: 'warning'
         })
         return false
-      } else if (index <= 1) {
+      }
+      else if (index + p < 0) {
         this.$message({
           message: '到顶了哥。。。',
           type: 'warning'
         })
         return false
       }
-      this.params.id = dataList[index + p]
-      this.$store.commit('changeNowPlayId', this.params.id)
-      return true
     },
     //获取音乐播放链接
     nowPlayMuisc () {
@@ -137,8 +151,8 @@ export default {
   text-align: center;
   display: flex;
   justify-content: center;
-  z-index: 1000;
   align-items: center;
+  transition: all 5s;
 }
 .btnPlay {
   background-color: #fff;

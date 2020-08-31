@@ -33,12 +33,14 @@
           </div>
           <hr />
           <div>
-            <el-table :data="datalist" stripe style="width: 100%">
+            <el-table :data="datalist" stripe style="width: 100%" ref="playList" highlight-current-row
+              :header-cell-style="{background: '#333', color: 'white', padding: '1px 0',height: '50px'}">
               <el-table-column type="index" width="50" :index="indexMethod">
               </el-table-column>
               <el-table-column label="操作">
                 <template slot-scope="scope">
-                  <el-button size="mini" @click="handleEdit(scope.$index, scope.row)" :loading="scope.$index===index">播放
+                  <el-button size="mini" :type="scope.$index===buttonIndex ?'goon': 'default'"
+                    @click="handleEdit(scope.$index, scope.row)" :loading="scope.$index===index">播放
                   </el-button>
                 </template>
               </el-table-column>
@@ -63,6 +65,8 @@
 
 <script>
 import { get } from '../../utils/request'
+import { Select } from 'element-ui'
+import { mapState } from 'vuex'
 export default {
 
   data () {
@@ -70,7 +74,9 @@ export default {
       singInformation: '',
       index: '',
       drawer: false,
-      flag: true
+      flag: true,
+      selectedArr: {},
+      showColor: 0
     }
   },
   props: {
@@ -120,13 +126,15 @@ export default {
       var params = {
         id: row.id
       }
+      // this.currentRow = row;
       // 修改当前的播放歌曲id
+      this.showColor = 1
       this.$store.commit('changeNowPlayId', row.id)
-      console.log('dahaigou', this.datalist);
+      this.$store.commit('changePlayButtonIndex', index)
+      this.$store.commit('changeShowOrHidden', true)
       get('api/song/url', params).then(res => {
         this.index = ''
         var url = res.data.data[0].url
-        console.log('dahai', url);
         if (url !== null) {
           this.$store.commit('changePlayurl', url)
         } else {
@@ -147,23 +155,23 @@ export default {
         this.$store.commit('changePlayList', temp)
         this.flag = false
       }
-
-
-
-
-
     },
     playHandle () {
-      console.log('播放歌曲');
-      console.log(this.$store.state.common.playStats);
       this.$store.commit('SET_PLAYSTATS', true)
-    }
+    },
   },
   watch: {
     datalist: function () {
-      console.log('datalist改变了')
+      this.index = ''
       this.flag = true
-    }
+      this.$store.commit('changePlayButtonIndex', '')
+    },
+  },
+  computed: {
+    ...mapState({
+      buttonIndex: state => state.myTest.playButtonIndex
+    })
+
   },
   mounted () {
 
@@ -187,5 +195,20 @@ export default {
 }
 .description {
   margin-left: 10px;
+}
+
+.el-button--goon.is-active,
+.el-button--goon:active {
+  background: #20b2aa;
+  border-color: #20b2aa;
+  color: #fff;
+}
+.el-table__body tr.hover-row > td {
+  background-color: #333 !important;
+}
+.el-button--goon {
+  background: red;
+  border-color: #48d1cc;
+  color: #fff;
 }
 </style>
