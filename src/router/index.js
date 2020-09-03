@@ -257,7 +257,7 @@ let routes = [{
         ]
     },
 
-    { path: "*", redirect: "/error/404", hidden: true }
+    // { path: "*", redirect: "/error/404", hidden: true }
 ];
 var router = new VueRouter({
     routes

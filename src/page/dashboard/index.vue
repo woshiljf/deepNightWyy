@@ -1,43 +1,28 @@
-
-Skip to content
-Pull requests
-Issues
-Marketplace
-Explore
-@woshiljf
-woshiljf /
-deepNightWyy
-
-1
-1
-
-    0
-
-Code
 <template>
   <div class="dashboard">
-    <el-container class="dash-container">
-      <el-header class="suggestion-title">
-        <div class="menu">
-          <el-menu :default-active="activeIndex2" class="el-menu-demo" mode="horizontal" @select="handleSelect"
-            background-color="#C20C0C" text-color="#fff" active-text-color="#cccccc">
-            <el-menu-item index="1">推荐</el-menu-item>
-            <el-menu-item index="2">排行榜</el-menu-item>
-            <el-menu-item index="3">歌单</el-menu-item>
-            <el-menu-item index="4">主播电台</el-menu-item>
-            <el-menu-item index="5">歌手</el-menu-item>
-            <el-menu-item index="6">新碟上架</el-menu-item>
-          </el-menu>
-        </div>
-      </el-header>
-      <el-main class="main-content">
+    <div class="dash-container">
+      <div class="menu">
+        <el-menu class="el-menu-demo" mode="horizontal" @select="()=>{}" background-color="#C20C0C" text-color="#fff"
+          active-text-color="#cccccc">
+          <el-menu-item index="1">推荐</el-menu-item>
+          <el-menu-item index="2">排行榜</el-menu-item>
+          <el-menu-item index="3">歌单</el-menu-item>
+          <el-menu-item index="4">主播电台</el-menu-item>
+          <el-menu-item index="5">歌手</el-menu-item>
+          <el-menu-item index="6">新碟上架</el-menu-item>
+        </el-menu>
+      </div>
+      <div class="lunbotumain">
         <div class="lunbotu">
           <el-carousel :interval="5000" arrow="always" class="carousel">
-            <el-carousel-item v-for="item in imgurl" :key="item.url">
-              <img :src="item.imgurl" alt="">
+            <el-carousel-item v-for="item in imgurl" :key="item.imgageUrl">
+              <img :src="item.imageUrl" :alt="item.typeTitle">
             </el-carousel-item>
           </el-carousel>
         </div>
+      </div>
+
+      <div class="main-content">
         <div class="suggestion-sing">
           <div>
             <el-tabs v-model="activeName" @tab-click="handleClick">
@@ -47,72 +32,85 @@ Code
               <el-tab-pane label="摇滚" name="4"></el-tab-pane>
               <el-tab-pane label="民谣" name="5"></el-tab-pane>
               <el-tab-pane label="电子" name="6"></el-tab-pane>
-              <el-tab-pane label="更多" name="7">
-              </el-tab-pane>
+              <el-tab-pane class="more" label="更多" name="7" style="position: absolute;right: 0"></el-tab-pane>
             </el-tabs>
           </div>
+
           <div class="hot-sug">
-            <el-row>
-              <ul>
-                <li class="sug-sings" v-for="item in creatives" :key="item">
-                  <img :src="item.uiElement.image.imageUrl" alt="">
+            <div>
+              <ul class="sugImg">
+                <li class="sug-sings" v-for="item in personData" :key="item">
+                  <img :src="item.picUrl" alt="">
                   <div>
                     <span>
-                      {{item.uiElement.mainTitle.title}}
+                      {{item.name}}
                     </span>
                   </div>
 
                 </li>
               </ul>
-            </el-row>
+            </div>
           </div>
-        </div>
 
-        <div class="suggestion-sing">
-          <div>
-            <el-tabs v-model="activeName" @tab-click="handleClick">
-              <el-tab-pane :label="styleSuggestion.uiElement.mainTitle.title" name="1"></el-tab-pane>
-            </el-tabs>
-          </div>
-          <div class="hot-sug">
-            <el-row>
-              <ul>
-                <li class="sug-sings" v-for="item in styleSuggestion.creatives[0].resources" :key="item">
-                  <img :src="item.uiElement.image.imageUrl" alt="">
-                  <div>
-                    <span>
-                      {{item.uiElement.mainTitle.title}}
-                    </span>
-                  </div>
+          <div class="newAblum-container">
+
+            <div class="title">
+
+              <span class="newAblum">新碟上架</span>
+              <span class="more">更多</span>
+
+            </div>
+
+            <div class="diside">
+              <hr style="color: red " />
+            </div>
+
+            <div class="ablumcontent">
+
+              <ul class="ablum-li">
+                <li v-for="item in newalbums" :key="item.id" class="img-li">
+
+                  <img :src="item.picUrl" alt="">
 
                 </li>
+
               </ul>
-            </el-row>
+
+            </div>
+
           </div>
+
         </div>
 
-      </el-main>
+      </div>
 
-    </el-container>
+    </div>
 
   </div>
 </template>
 <script>
-import imgurl from '../../../static/lunbotu.json'
-import { getHomePage } from '../../api/homepage'
+import { getHomePage, gerPersona, getNewAlbum, getTop } from '../../api/homepage'
+import { getHomeLubo } from '../../api/getHomeLubotu'
 import { getuserplaylist } from '../../api/userlikesings'
 export default {
   data () {
     return {
       userName: '',
-      imgurl: imgurl.data,
+      imgurl: [],
       singinfo: null,
       creatives: [],
-      styleSuggestion: []
+      activeName: '0',
+      styleSuggestion: [],
+      personData: [],
+      newalbums: []
     }
   },
   created () {
     this.getHomeInfor()
+    this.getHome()
+    this.getPersonList()
+    this.getnewAb()
+    this.getbandan()
     var user = sessionStorage.getItem("userId");
     if (user) {
       user = JSON.parse(user);
@@ -126,7 +124,6 @@ export default {
         this.singinfo = res.data.data.blocks
         this.creatives = res.data.data.blocks[0].creatives
         this.styleSuggestion = res.data.data.blocks[2]
-        console.log(this.creatives);
       }).catch(e => {
       })
     },
@@ -143,33 +140,120 @@ export default {
         })
       }
     },
+    getHome () {
+      getHomeLubo().then(res => {
+        this.imgurl = res.data.banners
+      })
+    },
+    getPersonList () {
+      gerPersona().then(res => {
+
+        this.personData = res.data.result.slice(0, 12)
+
+
+      })
+    },
+    getnewAb () {
+
+      getNewAlbum(20, 0).then(res => {
+
+        this.newalbums = res.data.weekData.slice(0, 10)
+
+
+      })
+
+    },
+
+    getbandan () {
+
+      getTop(0).then(res => {
+
+        console.log(res);
+
+      })
+
+
+
+    },
+
+
+
+    handleClick () {
+      console.log('a');
+    }
   }
 }
 </script>
 <style scoped>
+ul {
+  padding: 0;
+  margin: 0;
+}
 .dashboard {
-  text-align: center;
   overflow-y: scroll;
-  height: 100%;
+  height: 1200px;
   width: 100%;
+
   /* margin: 0 200px; */
+}
+.more {
+  right: 0;
 }
 .suggestion-title {
   height: 40px;
   padding: 0;
 }
-.main-content {
-  padding: 0;
+.el-tabs__nav {
+  width: 100%;
 }
+#tab-7 {
+  position: absolute !important;
+  right: 0;
+}
+.main-content {
+  width: 100%;
+  height: auto;
+  border: 1px solid #ccc;
+}
+.suggestion-sing {
+  margin: 0 200px;
+  border: 1px solid #ccc;
+  height: 100%;
+  float: left;
+}
+.lunbotumain {
+  width: 100%;
+  text-align: center;
+}
+.lunbotu {
+  padding: 0 150px;
+  width: 100%;
+  height: auto;
+  border-bottom: 1px solid #333;
+  background-color: #333;
+}
+.hot-sug {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
 .hot-sug ul {
   list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.sugImg {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
 }
 .sug-sings {
   width: 150px;
   height: 200px;
   border: 1px solid #000;
-  margin-left: 5px;
-  float: left;
+  margin-left: 20px;
+
+  margin-bottom: 5px;
 }
 .sug-sings img {
   width: 100%;
@@ -193,6 +277,38 @@ export default {
   background-color: #c20c0c;
 }
 .el-card {
+}
+
+/* 新碟上架部分 */
+.title {
+  display: flex;
+  justify-content: space-between;
+  padding: 0px 5px;
+}
+.newAblum {
+  color: #333;
+  font-size: 20px;
+  font-weight: bold;
+}
+.more {
+  color: red;
+  cursor: pointer;
+}
+.ablum-li {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+.img-li {
+  width: 200px;
+  height: 200px;
+  list-style: none;
+
+  margin-bottom: 5px;
+}
+.img-li img {
+  width: 100%;
+  height: 100%;
 }
 </style>
 

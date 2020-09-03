@@ -8,24 +8,18 @@
       </el-header>
 
       <el-main style="text-align: center">
-        <div><hr style="color: red" /></div>
+        <div>
+          <hr style="color: red" />
+        </div>
         <!-- <button @click="testClick">点我一下</button> -->
         <div>
           <el-button type="primary" @click="getComment">获取歌曲评论</el-button>
         </div>
 
         <div class="commentBox">
-          <el-card
-            class="box-card"
-            v-for="item in singComment"
-            :key="item.user.userId"
-          >
+          <el-card class="box-card" v-for="item in singComment" :key="item.user.userId">
             <div class="img">
-              <img
-                :src="item.user.avatarUrl"
-                alt=""
-                style="width: 120px;height: 120px"
-              />
+              <img :src="item.user.avatarUrl" alt="" style="width: 120px;height: 120px" />
             </div>
             <div class="comment">
               <p>{{ item.user.nickname }}</p>
@@ -42,15 +36,27 @@
 <script>
 import { get } from "../../utils/request";
 export default {
-  data() {
+  data () {
     return {
       id: this.$route.params.id,
       geci: "",
       singComment: []
     };
   },
+  watch: {
+    // 监听路由变化
+    $route: function (to, from) {
+
+      console.log('route变化');
+
+    }
+
+
+
+  },
+
   filters: {
-    formatDate: function(time) {
+    formatDate: function (time) {
       var now = new Date(time);
       var year = now.getFullYear(); //取得4位数的年份
       var month = now.getMonth() + 1; //取得日期中的月份，其中0表示1月，11表示12月
@@ -74,7 +80,7 @@ export default {
     }
   },
   methods: {
-    getComment() {
+    getComment () {
       console.log("执行了吗");
       var params = {
         id: this.$route.params.id,
@@ -87,7 +93,7 @@ export default {
   },
   // 组件导航钩子
 
-  beforeRouteEnter(to, from, next) {
+  beforeRouteEnter (to, from, next) {
     console.log("adfsfsdfsdf");
     next(vm => {
       console.log("歌曲id", vm.$route.params.id);
@@ -102,7 +108,7 @@ export default {
         .catch(e => {
           console.log(e);
         })
-        .finally(e => {});
+        .finally(e => { });
     });
   }
 };
