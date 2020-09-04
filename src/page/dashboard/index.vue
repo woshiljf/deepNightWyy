@@ -2,8 +2,14 @@
   <div class="dashboard">
     <div class="dash-container">
       <div class="menu">
-        <el-menu class="el-menu-demo" mode="horizontal" @select="()=>{}" background-color="#C20C0C" text-color="#fff"
-          active-text-color="#cccccc">
+        <el-menu
+          class="el-menu-demo"
+          mode="horizontal"
+          @select="() => {}"
+          background-color="#C20C0C"
+          text-color="#fff"
+          active-text-color="#cccccc"
+        >
           <el-menu-item index="1">推荐</el-menu-item>
           <el-menu-item index="2">排行榜</el-menu-item>
           <el-menu-item index="3">歌单</el-menu-item>
@@ -16,7 +22,7 @@
         <div class="lunbotu">
           <el-carousel :interval="5000" arrow="always" class="carousel">
             <el-carousel-item v-for="item in imgurl" :key="item.imgageUrl">
-              <img :src="item.imageUrl" :alt="item.typeTitle">
+              <img :src="item.imageUrl" :alt="item.typeTitle" />
             </el-carousel-item>
           </el-carousel>
         </div>
@@ -32,157 +38,140 @@
               <el-tab-pane label="摇滚" name="4"></el-tab-pane>
               <el-tab-pane label="民谣" name="5"></el-tab-pane>
               <el-tab-pane label="电子" name="6"></el-tab-pane>
-              <el-tab-pane class="more" label="更多" name="7" style="position: absolute;right: 0"></el-tab-pane>
+              <el-tab-pane
+                class="more"
+                label="更多"
+                name="7"
+                style="position: absolute;right: 0"
+              ></el-tab-pane>
             </el-tabs>
           </div>
 
           <div class="hot-sug">
             <div>
               <ul class="sugImg">
-                <li class="sug-sings" v-for="item in personData" :key="item">
-                  <img :src="item.picUrl" alt="">
-                  <div>
-                    <span>
-                      {{item.name}}
-                    </span>
+                <li class="sug-sings" v-for="item in personData" :key="item.id">
+                  <div class="sug-class" @click="goToPlayList(item.id);">
+                    <img :src="item.picUrl" alt="" />
+                    <div>
+                      <span> {{ item.name }} </span>
+                    </div>
                   </div>
-
                 </li>
               </ul>
             </div>
           </div>
 
           <div class="newAblum-container">
-
             <div class="title">
-
               <span class="newAblum">新碟上架</span>
               <span class="more">更多</span>
-
             </div>
 
-            <div class="diside">
-              <hr style="color: red " />
-            </div>
+            <div class="diside"><hr style="color: red " /></div>
 
             <div class="ablumcontent">
-
               <ul class="ablum-li">
                 <li v-for="item in newalbums" :key="item.id" class="img-li">
-
-                  <img :src="item.picUrl" alt="">
-
+                  <img :src="item.picUrl" alt="" />
                 </li>
-
               </ul>
-
             </div>
-
           </div>
-
         </div>
-
       </div>
-
     </div>
-
   </div>
 </template>
 <script>
-import { getHomePage, gerPersona, getNewAlbum, getTop } from '../../api/homepage'
-import { getHomeLubo } from '../../api/getHomeLubotu'
-import { getuserplaylist } from '../../api/userlikesings'
+import {
+  getHomePage,
+  gerPersona,
+  getNewAlbum,
+  getTop
+} from "../../api/homepage";
+import { getHomeLubo } from "../../api/getHomeLubotu";
+import { getuserplaylist } from "../../api/userlikesings";
 export default {
-  data () {
+  data() {
     return {
-      userName: '',
+      userName: "",
       imgurl: [],
       singinfo: null,
       creatives: [],
-      activeName: '0',
+      activeName: "0",
       styleSuggestion: [],
       personData: [],
       newalbums: []
-    }
+    };
   },
-  created () {
-    this.getHomeInfor()
-    this.getHome()
-    this.getPersonList()
-    this.getnewAb()
-    this.getbandan()
+  created() {
+    this.getHomeInfor();
+    this.getHome();
+    this.getPersonList();
+    this.getnewAb();
+    this.getbandan();
     var user = sessionStorage.getItem("userId");
     if (user) {
       user = JSON.parse(user);
       this.userId = user.userId || "";
     }
-    this.getplaylist(this.userId)
+    this.getplaylist(this.userId);
   },
   methods: {
-    getHomeInfor () {
-      getHomePage().then(res => {
-        this.singinfo = res.data.data.blocks
-        this.creatives = res.data.data.blocks[0].creatives
-        this.styleSuggestion = res.data.data.blocks[2]
-      }).catch(e => {
-      })
+    getHomeInfor() {
+      getHomePage()
+        .then(res => {
+          this.singinfo = res.data.data.blocks;
+          this.creatives = res.data.data.blocks[0].creatives;
+          this.styleSuggestion = res.data.data.blocks[2];
+        })
+        .catch(e => {});
     },
     // 获取歌单列表
-    getplaylist (userId) {
+    getplaylist(userId) {
       // console.log('dahaigou');
-      var dataPlayList = sessionStorage.getItem("dataList")
+      var dataPlayList = sessionStorage.getItem("dataList");
       if (dataPlayList) {
-        return
+        return;
       } else {
         getuserplaylist(userId).then(response => {
-          var data = response.data.playlist
-          sessionStorage.setItem("dataList", JSON.stringify({ data }))
-        })
+          var data = response.data.playlist;
+          sessionStorage.setItem("dataList", JSON.stringify({ data }));
+        });
       }
     },
-    getHome () {
+    getHome() {
       getHomeLubo().then(res => {
-        this.imgurl = res.data.banners
-      })
+        this.imgurl = res.data.banners;
+      });
     },
-    getPersonList () {
+    getPersonList() {
       gerPersona().then(res => {
-
-        this.personData = res.data.result.slice(0, 12)
-
-
-      })
+        this.personData = res.data.result.slice(0, 12);
+        console.log("首页的歌单", this.personData);
+      });
     },
-    getnewAb () {
-
+    getnewAb() {
       getNewAlbum(20, 0).then(res => {
-
-        this.newalbums = res.data.weekData.slice(0, 10)
-
-
-      })
-
+        this.newalbums = res.data.weekData.slice(0, 10);
+      });
     },
 
-    getbandan () {
-
-      getTop(0).then(res => {
-
-        console.log(res);
-
-      })
-
-
-
+    goToPlayList(sId) {
+      this.$router.push({
+        name: "playlist",
+        params: {
+          id: sId
+        }
+      });
     },
 
-
-
-    handleClick () {
-      console.log('a');
+    handleClick() {
+      console.log("a");
     }
   }
-}
+};
 </script>
 <style scoped>
 ul {
@@ -311,4 +300,3 @@ ul {
   height: 100%;
 }
 </style>
-

@@ -3,29 +3,96 @@
     <div style="height: auto; border: 1px solid #eee" class="container-content">
       <div class="content-left">
         <div style="height: auto">
-          <div class="lrc">
-            <div class="lyric">
-              <scroll
-                class="lyric-wrapper"
-                ref="lyricList"
-                :data="geci && geci.lines"
-              >
-                <div>
-                  <div class="lyric">
-                    <p
-                      v-for="(line, index) in geci.lines"
-                      ref="lyricLine"
-                      :class="{ current: currentLineNum === index }"
-                      class="text"
-                      :key="index"
-                    >
-                      {{ line.txt }}
-                    </p>
-                  </div>
-                </div>
-              </scroll>
+          <div class="playListTitle">
+            <div class="imagcover">
+              <img
+                :src="coverImgUrl"
+                alt=""
+                style="width: 270px;heigth: 260px"
+              />
+            </div>
+            <div class="description">
+              <div class="con play-title">
+                <span class="nametitle">{{ nameTitle }}</span>
+              </div>
+
+              <div class="con creator">
+                <img
+                  :src="cAvatarUrl"
+                  alt=""
+                  style="width: 20px;height: 20px"
+                />
+                <span>{{ cNickName }}</span> <span>2020-01-08创建</span>
+              </div>
+
+              <div class="con button">
+                <el-button type="primary" @click="playHandle">播放</el-button>
+                <el-button type="success">收藏</el-button>
+                <el-button type="info">分享</el-button>
+                <el-button type="warning">下载</el-button>
+                <el-button type="danger">评论</el-button>
+              </div>
+              <div class="con tag">
+                <span>标签</span>
+                <el-button
+                  round
+                  size="mini"
+                  v-for="(item, i) in playListTags"
+                  :key="i"
+                  >{{ item }}</el-button
+                >
+              </div>
+              <div class=" con dec-content">
+                <p>{{ description }}</p>
+              </div>
             </div>
           </div>
+        </div>
+
+        <div class="playListTable">
+          <el-table
+            :data="dataSongs"
+            stripe
+            style="width: 100%"
+            ref="playList"
+            highlight-current-row
+            :header-cell-style="{
+              background: '#333',
+              color: 'white',
+              padding: '1px 0',
+              height: '50px'
+            }"
+          >
+            <el-table-column type="index" width="50" :index="indexMethod">
+            </el-table-column>
+            <el-table-column label="操作">
+              <template slot-scope="scope">
+                <el-button
+                  size="mini"
+                  :type="scope.$index === buttonIndex ? 'goon' : 'default'"
+                  @click="handleEdit(scope.$index, scope.row);"
+                  :loading="scope.$index === index"
+                  >播放
+                </el-button>
+              </template>
+            </el-table-column>
+            <el-table-column prop="title" label="歌曲标题" width="180">
+              <template slot-scope="scope">
+                <router-link
+                  :to="{ name: 'singInfo', params: { id: scope.row.id } }"
+                >
+                  <span class="singName">{{ scope.row.title }}</span>
+                </router-link>
+              </template>
+            </el-table-column>
+            <el-table-column prop="time" label="时长" width="180">
+              <template slot-scope="scope">
+                <span>{{ scope.row.time | formatDate(scope.row.time) }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="singer" label="歌手"> </el-table-column>
+            <el-table-column prop="zj" label="专辑"> </el-table-column>
+          </el-table>
         </div>
 
         <div>
@@ -197,6 +264,7 @@ import {
   getSimPlaysings,
   submitComment
 } from "@/api/listenSing";
+import { getPlayListDetail } from "@/api/getSongsSheet";
 import Scroll from "../../components/baseScroll";
 import Lyric from "lyric-parser";
 import { mapState } from "vuex";
@@ -223,7 +291,14 @@ export default {
       loadIndex: 0,
       textarea: "",
       textarea2: "",
-      commentIndex: 0
+      commentIndex: 0,
+      dataSongs: [],
+      description: "",
+      coverImgUrl: "",
+      nameTitle: "",
+      cAvatarUrl: "",
+      cNickName: "",
+      playListTags: []
     };
   },
   watch: {
@@ -264,7 +339,7 @@ export default {
   },
   mounted() {
     this.getComment();
-    this.getLrc();
+    this.getPlaylist();
     this.getsimiInfo();
   },
   methods: {
@@ -275,32 +350,54 @@ export default {
         offset: this.offset
       };
       this.comentLoading = true;
-      get("api/comment/music", params).then(res => {
+      get("api/comment/playlist", params).then(res => {
         // console.log('下一页开始', res);
         this.comentLoading = false;
-
         this.singComment = [];
         this.singComment = res.data.comments;
         this.total = res.data.total;
       });
     },
-    getLrc() {
+    getPlaylist() {
       var params = {
         id: this.id
       };
-      get("api/lyric", params)
-        .then(res => {
-          var getgeci = res.data.lrc.lyric;
-          this.geci = new Lyric(getgeci, this.handleLyric);
-          if (this.playing) {
-            this.geci.play();
-          }
+      get("api/playlist/detail", params)
+        .then(response => {
+          console.log("歌单", response);
+          var dataSongs = response.data.playlist.tracks;
+
+          this.description = response.data.playlist.description;
+          this.coverImgUrl = response.data.playlist.coverImgUrl;
+          this.nameTitle = response.data.playlist.name;
+          this.playListTags = response.data.playlist.tags;
+          this.cNickName = response.data.playlist.creator.nickname;
+          this.cAvatarUrl = response.data.playlist.creator.avatarUrl;
+
+          this.show(dataSongs);
         })
         .catch(e => {
           console.log(e);
         })
         .finally(e => {});
     },
+
+    show(data) {
+      var dataList = [];
+      for (let i = 0; i < data.length; i++) {
+        var obj = {};
+        obj.title = data[i].name;
+        obj.singer = data[i].ar[0].name;
+        obj.zj = data[i].al.name;
+        obj.time = data[i].dt;
+        obj.id = data[i].id;
+        dataList.push(obj);
+      }
+
+      this.dataSongs = dataList;
+      console.log("处理的数据", this.dataSongs);
+    },
+
     //
     // 歌词滚动还没有实现
     handleLyric({ lineNum, txt }) {
@@ -430,10 +527,19 @@ export default {
   height: 50px;
 }
 
-.lrc {
-  text-align: center;
-  line-height: 50px;
+.playListTitle {
+  display: flex;
 }
+.con {
+  margin-bottom: 15px;
+}
+.imagcover {
+  margin-right: 15px;
+}
+.nametitle {
+  font-size: 20px;
+}
+
 .hr {
   background-color: red;
   width: 100%;
@@ -463,6 +569,7 @@ export default {
 
 .content-left {
   width: 100%;
+  padding: 20px 15px;
   border-right: 1px solid #ccc;
 }
 

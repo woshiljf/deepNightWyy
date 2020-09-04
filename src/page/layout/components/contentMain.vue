@@ -1,7 +1,7 @@
 <template>
   <div class="contentMain">
     <transition name="fade-transform" mode="out-in">
-      <keep-alive>
+      <keep-alive exclude="singInfo">
         <router-view v-if="$route.meta.keepAlive"></router-view>
       </keep-alive>
       <router-view v-if="!$route.meta.keepAlive"></router-view>
@@ -11,17 +11,13 @@
 <script>
 import { mapGetters, mapMutations } from 'vuex'
 import { getHomePage } from '../../../api/homepage.js'
-import imgurl from '../../../../static/lunbotu.json'
 export default {
   name: 'Content',
   components: {
   },
   data () {
     return {
-      imgurl: imgurl.data,
-      arry: this.$store.state.tagsRoute.routeArr,
       activepath: '',
-      singinfo: null
     }
   },
   watch: {

@@ -203,6 +203,7 @@ export default {
         obj.id = data[i].id;
         dataList.push(obj);
       }
+
       this.dataSongs = dataList;
     },
     getCollectSinger() {
@@ -237,7 +238,9 @@ export default {
       getMyVedio()
         .then(response => {
           this.loading.close();
+
           this.likeVedio = response.data.data;
+          console.log("视频", response);
         })
         .catch(e => {
           this.loading.close();

@@ -14,12 +14,13 @@ const user = {
         // mock为admin
         roles: [],
         userName: "",
-        roleCode: "",
+        userId: "",
         roleName: "",
         resourceCode: "",
         setting: {
-            articlePlatform: [],
+            articlePlatform: []
         },
+        userAvatarUrl: ""
     },
 
     mutations: {
@@ -50,8 +51,8 @@ const user = {
         SET_ROLE: (state, role) => {
             state.role = role;
         },
-        SET_ROLECODE: (state, roleCode) => {
-            state.roleCode = roleCode;
+        SET_USERID: (state, userId) => {
+            state.userId = userId;
         },
         SET_RESOURCECODE: (state, resourceCode) => {
             state.resourceCode = resourceCode;
@@ -59,6 +60,9 @@ const user = {
         SET_ROLENAME: (state, roleName) => {
             state.roleName = roleName;
         },
+        SET_USERAvatarUrl: (state, avatarUrl) => {
+            state.userAvatarUrl = avatarUrl;
+        }
     },
 
     actions: {
@@ -67,8 +71,7 @@ const user = {
             const username = userInfo.userCode.trim();
             return new Promise((resolve, reject) => {
                 loginByUsername(username, userInfo.password)
-                    .then((response) => {
-                        console.log("response大海狗", response);
+                    .then(response => {
                         if (response.data.msg) {
                             resolve(response);
                         }
@@ -80,13 +83,16 @@ const user = {
 
                             sessionStorage.setItem("user", JSON.stringify({ loginName }));
                             sessionStorage.setItem("userId", JSON.stringify({ userId }));
+                            commit("SET_USERAvatarUrl", response.data.profile.avatarUrl);
+                            commit("SET_USERID", response.data.profile.userId);
                             commit("SET_TOKEN", response.data.token);
                             setToken(response.data.token);
+
                             // console.log(response, 'cccccc.store.modules.user.settoken')
                             resolve();
                         }
                     })
-                    .catch((error) => {
+                    .catch(error => {
                         reject(error);
                     });
             });
@@ -95,10 +101,10 @@ const user = {
         ChangePassword({ commit }, userInfo) {
             return new Promise((resolve, reject) => {
                 changePassword(userInfo)
-                    .then((response) => {
+                    .then(response => {
                         resolve(response);
                     })
-                    .catch((error) => {
+                    .catch(error => {
                         reject(error);
                     });
             });
@@ -107,7 +113,7 @@ const user = {
         GetUserInfo({ commit, state }) {
             return new Promise((resolve, reject) => {
                 getUserInfo(state.token)
-                    .then((response) => {
+                    .then(response => {
                         if (!response.data) {
                             reject("Verification failed, please login again.");
                         }
@@ -126,7 +132,7 @@ const user = {
                         commit("SET_RESOURCECODE", data.resourceCode);
                         resolve(response);
                     })
-                    .catch((error) => {
+                    .catch(error => {
                         reject(error);
                     });
             });
@@ -144,7 +150,7 @@ const user = {
                         localStorage.clear();
                         resolve();
                     })
-                    .catch((error) => {
+                    .catch(error => {
                         reject(error);
                     });
             });
@@ -152,7 +158,7 @@ const user = {
 
         // 前端 登出
         FedLogOut({ commit }) {
-            return new Promise((resolve) => {
+            return new Promise(resolve => {
                 commit("SET_TOKEN", "");
                 removeToken();
                 resolve();
@@ -161,17 +167,17 @@ const user = {
         // accessToken 刷新
         UpdateToken({ commit }, token) {
             // console.log(token, 'updateToken')
-            return new Promise((resolve) => {
+            return new Promise(resolve => {
                 commit("SET_TOKEN", token);
                 resolve();
             });
         },
         // 动态修改权限
         ChangeRoles({ commit, dispatch }, role) {
-            return new Promise((resolve) => {
+            return new Promise(resolve => {
                 commit("SET_TOKEN", role);
                 setToken(role);
-                getUserInfo(role).then((response) => {
+                getUserInfo(role).then(response => {
                     const data = response.data;
                     commit("SET_ROLES", data.roles);
                     commit("SET_NAME", data.name);
@@ -182,8 +188,8 @@ const user = {
                     resolve();
                 });
             });
-        },
-    },
+        }
+    }
 };
 
 export default user;

@@ -15,6 +15,9 @@ import MyFrends from "../page/MyFrends/index.vue";
 import playSing from "../page/mymusic/playForm.vue";
 import ShopCity from "../page/shopCity/index.vue";
 import MusicPerson from "../page/musicPerson/index.vue";
+import mvDetail from "../page/mymusic/mvDetail.vue";
+
+import playList from "../page/playList/index.vue";
 
 // 要告诉 vue 使用 vueRouter
 Vue.use(VueRouter);
@@ -97,11 +100,48 @@ let routes = [{
         meta: {
             keepAlive: true // 不需要缓存
         },
-        iconCls: "el-icon-s-home", //图标样式class
         children: [{
             path: "/playsing",
             name: "singInfo",
             component: playSing,
+            meta: {
+                keepAlive: true // 不需要缓存
+            },
+            hidden: true
+        }]
+    },
+
+    {
+        path: "mving",
+        component: home,
+        name: "mv",
+        meta: {
+            keepAlive: true
+        },
+        children: [{
+            path: "/collectMv",
+            name: "collectMv",
+            component: mvDetail,
+            meta: {
+                keepAlive: true // 不需要缓存
+            },
+            hidden: true
+        }]
+    },
+
+    // 歌单链表
+
+    {
+        path: "play-list",
+        component: home,
+        name: "playlistname",
+        meta: {
+            keepAlive: true
+        },
+        children: [{
+            path: "/playlist",
+            name: "playlist",
+            component: playList,
             meta: {
                 keepAlive: true // 不需要缓存
             },
@@ -255,7 +295,7 @@ let routes = [{
                 iconCls: "el-icon-message" //图标样式class
             }
         ]
-    },
+    }
 
     // { path: "*", redirect: "/error/404", hidden: true }
 ];

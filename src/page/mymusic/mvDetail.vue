@@ -4,27 +4,15 @@
       <div class="content-left">
         <div style="height: auto">
           <div class="lrc">
-            <div class="lyric">
-              <scroll
-                class="lyric-wrapper"
-                ref="lyricList"
-                :data="geci && geci.lines"
-              >
-                <div>
-                  <div class="lyric">
-                    <p
-                      v-for="(line, index) in geci.lines"
-                      ref="lyricLine"
-                      :class="{ current: currentLineNum === index }"
-                      class="text"
-                      :key="index"
-                    >
-                      {{ line.txt }}
-                    </p>
-                  </div>
-                </div>
-              </scroll>
-            </div>
+            <h2 style="padding: 0;margin:0">{{ mvInfo.title }}</h2>
+            <video
+              :src="myMvurl"
+              width="100%"
+              height="auto"
+              controls="controls"
+            >
+              Your browser does not support the video tag.
+            </video>
           </div>
         </div>
 
@@ -138,22 +126,33 @@
       </div>
       <div class="content-right">
         <div class="one">
-          <h3>包含这首歌的歌单</h3>
+          <h3>相似的MV</h3>
           <hr />
           <div class="simi-content">
             <ul style="list-style: none;padding:0;margin: 0">
-              <li v-for="(item, index) in simiPlayList" :key="index">
-                <div class="img">
-                  <img
-                    :src="item.coverImgUrl"
-                    alt=""
-                    style="width: 50px;height: 50px"
-                  />
-                </div>
-                <div class="comment">
-                  <p>{{ item.name }}</p>
-
-                  <p>{{ item.creator.nickname }}</p>
+              <li
+                v-for="(item, index) in realatedMv"
+                :key="index"
+                class="title-li"
+              >
+                <div class="simi-content">
+                  <div style="margin-right: 5px">
+                    <img
+                      :src="item.coverUrl"
+                      alt=""
+                      style="width:70px;height: 50px"
+                    />
+                  </div>
+                  <div class="content-title">
+                    <!-- <p>{{ item.title }}</p> -->
+                    <span
+                      @click="playSong(item.vid);"
+                      :loading="item.id === loadIndex"
+                      class="play-class"
+                    >
+                      {{ item.title }}</span
+                    >
+                  </div>
                 </div>
               </li>
             </ul>
@@ -192,15 +191,12 @@
 
 <script>
 import { get } from "@/utils/request";
-import {
-  getSimPlayList,
-  getSimPlaysings,
-  submitComment
-} from "@/api/listenSing";
+import { playMv } from "@/api/myVedio";
 import Scroll from "../../components/baseScroll";
 import Lyric from "lyric-parser";
 import { mapState } from "vuex";
-
+import { getMvDetail, getRelatedMv } from "@/api/myVedio";
+import { submitComment } from "@/api/listenSing";
 export default {
   name: "singInfo",
   components: {
@@ -223,7 +219,10 @@ export default {
       loadIndex: 0,
       textarea: "",
       textarea2: "",
-      commentIndex: 0
+      commentIndex: 0,
+      myMvurl: "",
+      mvInfo: "",
+      realatedMv: []
     };
   },
   watch: {
@@ -263,11 +262,24 @@ export default {
     }
   },
   mounted() {
-    this.getComment();
-    this.getLrc();
-    this.getsimiInfo();
+    this.firstGetInfo();
+    // this.getsimiInfo();
   },
   methods: {
+    firstGetInfo() {
+      this.getMvUrl();
+      this.getMvInfo();
+      this.getSameMv();
+      this.getComment();
+    },
+    getSameMv() {
+      var mid = this.id;
+      getRelatedMv(mid).then(res => {
+        this.realatedMv = res.data.data;
+        console.log("mv信息", this.realatedMv);
+      });
+    },
+
     getComment() {
       var params = {
         id: this.id,
@@ -275,7 +287,7 @@ export default {
         offset: this.offset
       };
       this.comentLoading = true;
-      get("api/comment/music", params).then(res => {
+      get("api/comment/video", params).then(res => {
         // console.log('下一页开始', res);
         this.comentLoading = false;
 
@@ -284,17 +296,14 @@ export default {
         this.total = res.data.total;
       });
     },
-    getLrc() {
+    getMvUrl() {
       var params = {
         id: this.id
       };
-      get("api/lyric", params)
+
+      get("api/video/url", params)
         .then(res => {
-          var getgeci = res.data.lrc.lyric;
-          this.geci = new Lyric(getgeci, this.handleLyric);
-          if (this.playing) {
-            this.geci.play();
-          }
+          this.myMvurl = res.data.urls[0].url;
         })
         .catch(e => {
           console.log(e);
@@ -302,17 +311,12 @@ export default {
         .finally(e => {});
     },
     //
-    // 歌词滚动还没有实现
-    handleLyric({ lineNum, txt }) {
-      this.currentLineNum = lineNum;
-      // 若当前行大于5,开始滚动,以保歌词显示于中间位置
-      if (lineNum > 5) {
-        let lineEl = this.$refs.lyricLine[lineNum - 5];
-        // 结合better-scroll，滚动歌词
-        this.$refs.lyricList.scrollTo(lineEl, 1000);
-      } else {
-        this.$refs.lyricList.scrollTo(0, 0, 1000);
-      }
+
+    getMvInfo() {
+      var id = this.id;
+      getMvDetail(id).then(res => {
+        this.mvInfo = res.data.data;
+      });
     },
     sizeChange(data) {
       this.pageSize = data;
@@ -348,27 +352,13 @@ export default {
         id: songid
       };
       this.id = songid;
-      this.$store.commit("changeShowOrHidden", true);
+      // this.$store.commit("changeShowOrHidden", true);
       // 请求歌词
-      this.getLrc();
+      // this.getLrc();
+      this.getMvUrl();
+      this.getMvInfo();
+      this.getSameMv();
       this.getComment();
-      get("api/song/url", params)
-        .then(res => {
-          this.loadIndex = 0;
-          var url = res.data.data[0].url;
-          if (url !== null) {
-            this.$store.commit("changePlayurl", url);
-          } else {
-            this.$message({
-              message: "穷人听不起，要会员的。。。",
-              type: "warning"
-            });
-          }
-        })
-        .catch(e => {
-          console.log(e);
-        })
-        .finally(e => {});
     },
     commentHandle(params) {
       if (params.content == "") {
@@ -397,7 +387,8 @@ export default {
     submitMyComment() {
       var params = {
         id: this.id,
-        content: this.textarea
+        content: this.textarea,
+        type: 5
       };
       this.commentHandle(params);
     },
@@ -405,6 +396,7 @@ export default {
       var params = {
         t: 2,
         id: this.id,
+        type: 5,
         content: this.textarea2,
         commentId: commentId
       };
@@ -464,6 +456,7 @@ export default {
 .content-left {
   width: 100%;
   border-right: 1px solid #ccc;
+  padding: 0 20px;
 }
 
 .content-right {
@@ -483,5 +476,21 @@ export default {
 }
 .anwser {
   float: right;
+}
+.simi-content {
+  display: flex;
+  justify-content: space-around;
+}
+.content-title {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.title-li {
+  margin-bottom: 8px;
+}
+.play-class:hover {
+  text-decoration: underline;
+  cursor: pointer;
 }
 </style>

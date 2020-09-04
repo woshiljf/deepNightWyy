@@ -2,37 +2,51 @@
   <div class="container-header">
     <div class="header">
       <div class="logo" :class="'logo-width'">
-        <img src="../../../assets/img/1186871.png" alt="" class="imglogo">
+        <img src="../../../assets/img/1186871.png" alt="" class="imglogo" />
         <span class="logo-title">深夜网抑云音乐</span>
       </div>
 
       <div class="navmenue">
-        <el-menu :default-active="activeIndex2" class="el-menu-demo" mode="horizontal" @select="handleSelect"
-          background-color="#333333" text-color="#fff" active-text-color="#ffd04b">
-          <el-menu-item index="1" @click="findMusic">
-            发现音乐
-          </el-menu-item>
-          <el-menu-item index="2" @click="myMusicHandle">我的音乐
+        <el-menu
+          :default-active="activeIndex2"
+          class="el-menu-demo"
+          mode="horizontal"
+          @select="handleSelect"
+          background-color="#333333"
+          text-color="#fff"
+          active-text-color="#ffd04b"
+        >
+          <el-menu-item index="1" @click="findMusic"> 发现音乐 </el-menu-item>
+          <el-menu-item index="2" @click="myMusicHandle"
+            >我的音乐
           </el-menu-item>
           <el-menu-item index="3" @click="frendsHandle">朋友</el-menu-item>
           <el-menu-item index="4" @click="shopHandle">商城</el-menu-item>
-          <el-menu-item index="5" @click="musicPersonHandle">音乐人</el-menu-item>
+          <el-menu-item index="5" @click="musicPersonHandle"
+            >音乐人</el-menu-item
+          >
           <el-menu-item index="6" @click="downLoad">深夜鬼故事</el-menu-item>
         </el-menu>
       </div>
       <div>
         <div class="search">
-          <input type="text" class="search-box" placeholder="音乐/视频/电台/用户">
+          <input
+            type="text"
+            class="search-box"
+            placeholder="音乐/视频/电台/用户"
+          />
         </div>
         <div class="user-center">
           <el-button type="primary" round>创作者中心</el-button>
         </div>
       </div>
       <div class="userinfo">
-        <img src="https://p3.music.126.net/VctqyaUP8v8WKu09zVmCEg==/18963277044391219.jpg" alt="" class="imgamure">
+        <img :src="userImg" alt="" class="imgamure" />
         <span class="name"> {{ sysUserName }}</span>
         <el-dropdown trigger="hover">
-          <span class="el-dropdown-link userinfo-inner el-icon-caret-bottom"></span>
+          <span
+            class="el-dropdown-link userinfo-inner el-icon-caret-bottom"
+          ></span>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item>我的主页</el-dropdown-item>
             <el-dropdown-item>我的消息</el-dropdown-item>
@@ -40,31 +54,34 @@
             <el-dropdown-item>VIP会员</el-dropdown-item>
             <el-dropdown-item>个人设置</el-dropdown-item>
             <el-dropdown-item>实名认证</el-dropdown-item>
-            <el-dropdown-item divided @click.native="logoutFun">退出登录</el-dropdown-item>
+            <el-dropdown-item divided @click.native="logoutFun"
+              >退出登录</el-dropdown-item
+            >
           </el-dropdown-menu>
         </el-dropdown>
       </div>
     </div>
-
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapState } from "vuex";
 export default {
-  name: 'Head',
-  data () {
+  name: "Head",
+  data() {
     return {
-      sysName: '网抑云音乐',
-      sysUserName: '',
+      sysName: "网抑云音乐",
+      sysUserName: "",
       treeArry: [],
       arry: [],
-      activeIndex2: '1'
-    }
+      activeIndex2: "1"
+    };
   },
   computed: {
-    ...mapGetters(["username", "password", "treeData"])
+    ...mapState({
+      userImg: state => state.user.userAvatarUrl
+    })
   },
-  mounted () {
+  mounted() {
     var user = sessionStorage.getItem("user");
     if (user) {
       user = JSON.parse(user);
@@ -72,51 +89,49 @@ export default {
     }
   },
   methods: {
-    logoutFun: function () {
-      var _this = this
+    logoutFun: function() {
+      var _this = this;
       this.$confirm("确认退出吗?", "提示", {
-        type: 'warning'
+        type: "warning"
       })
         .then(() => {
-          this.$store.dispatch('LogOut').then(() => {
-            sessionStorage.removeItem("user")
-            _this.$router.push("/login")
+          this.$store.dispatch("LogOut").then(() => {
+            sessionStorage.removeItem("user");
+            _this.$router.push("/login");
             // 退出清空router
-            this.$store.commit('clearRouters')
-          })
+            this.$store.commit("clearRouters");
+          });
         })
-        .catch(() => { })
+        .catch(() => {});
     },
-    myMusicHandle () {
-      this.$router.push({ path: '/mymusic' })
+    myMusicHandle() {
+      this.$router.push({ path: "/mymusic" });
     },
-    findMusic () {
-      this.$router.push({ path: '/' })
+    findMusic() {
+      this.$router.push({ path: "/" });
     },
-    frendsHandle () {
-      this.$router.push({ path: '/myfrends' })
+    frendsHandle() {
+      this.$router.push({ path: "/myfrends" });
     },
-    shopHandle () {
-      this.$router.push({ path: '/shopcity' })
+    shopHandle() {
+      this.$router.push({ path: "/shopcity" });
     },
-    musicPersonHandle () {
-      this.$router.push({ path: '/musicPerson' })
+    musicPersonHandle() {
+      this.$router.push({ path: "/musicPerson" });
     },
-    downLoad () {
-
-    },
-    handleSelect () {
-      console.log('handleSelect');
+    downLoad() {},
+    handleSelect() {
+      console.log("handleSelect");
     }
   },
-  created () {
+  created() {
     if (this.userName) {
-      this.sysUserName = this.userName
+      this.sysUserName = this.userName;
     } else {
       this.sysUserName = "admin";
     }
-  },
-}
+  }
+};
 </script>
 <style scoped>
 .container-header {
