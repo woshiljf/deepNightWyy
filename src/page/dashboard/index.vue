@@ -2,14 +2,8 @@
   <div class="dashboard">
     <div class="dash-container">
       <div class="menu">
-        <el-menu
-          class="el-menu-demo"
-          mode="horizontal"
-          @select="() => {}"
-          background-color="#C20C0C"
-          text-color="#fff"
-          active-text-color="#cccccc"
-        >
+        <el-menu class="el-menu-demo" mode="horizontal" @select="() => {}" background-color="#C20C0C" text-color="#fff"
+          active-text-color="#cccccc">
           <el-menu-item index="1">推荐</el-menu-item>
           <el-menu-item index="2">排行榜</el-menu-item>
           <el-menu-item index="3">歌单</el-menu-item>
@@ -22,7 +16,9 @@
         <div class="lunbotu">
           <el-carousel :interval="5000" arrow="always" class="carousel">
             <el-carousel-item v-for="item in imgurl" :key="item.imgageUrl">
-              <img :src="item.imageUrl" :alt="item.typeTitle" />
+              <img :src="item.imageUrl" :alt="item.typeTitle" @click="
+                  gotoHomeSong(item.targetId, item.targetType, item.typeTitle);
+                " />
             </el-carousel-item>
           </el-carousel>
         </div>
@@ -38,12 +34,7 @@
               <el-tab-pane label="摇滚" name="4"></el-tab-pane>
               <el-tab-pane label="民谣" name="5"></el-tab-pane>
               <el-tab-pane label="电子" name="6"></el-tab-pane>
-              <el-tab-pane
-                class="more"
-                label="更多"
-                name="7"
-                style="position: absolute;right: 0"
-              ></el-tab-pane>
+              <el-tab-pane class="more" label="更多" name="7" style="position: absolute;right: 0"></el-tab-pane>
             </el-tabs>
           </div>
 
@@ -68,7 +59,9 @@
               <span class="more">更多</span>
             </div>
 
-            <div class="diside"><hr style="color: red " /></div>
+            <div class="diside">
+              <hr style="color: red " />
+            </div>
 
             <div class="ablumcontent">
               <ul class="ablum-li">
@@ -93,7 +86,7 @@ import {
 import { getHomeLubo } from "../../api/getHomeLubotu";
 import { getuserplaylist } from "../../api/userlikesings";
 export default {
-  data() {
+  data () {
     return {
       userName: "",
       imgurl: [],
@@ -105,12 +98,11 @@ export default {
       newalbums: []
     };
   },
-  created() {
+  created () {
     this.getHomeInfor();
     this.getHome();
     this.getPersonList();
     this.getnewAb();
-    this.getbandan();
     var user = sessionStorage.getItem("userId");
     if (user) {
       user = JSON.parse(user);
@@ -119,17 +111,17 @@ export default {
     this.getplaylist(this.userId);
   },
   methods: {
-    getHomeInfor() {
+    getHomeInfor () {
       getHomePage()
         .then(res => {
           this.singinfo = res.data.data.blocks;
           this.creatives = res.data.data.blocks[0].creatives;
           this.styleSuggestion = res.data.data.blocks[2];
         })
-        .catch(e => {});
+        .catch(e => { });
     },
     // 获取歌单列表
-    getplaylist(userId) {
+    getplaylist (userId) {
       // console.log('dahaigou');
       var dataPlayList = sessionStorage.getItem("dataList");
       if (dataPlayList) {
@@ -141,24 +133,25 @@ export default {
         });
       }
     },
-    getHome() {
+    getHome () {
       getHomeLubo().then(res => {
         this.imgurl = res.data.banners;
       });
     },
-    getPersonList() {
+    getPersonList () {
       gerPersona().then(res => {
         this.personData = res.data.result.slice(0, 12);
-        console.log("首页的歌单", this.personData);
       });
     },
-    getnewAb() {
+    getnewAb () {
       getNewAlbum(20, 0).then(res => {
+        // this.newalbums = res.data.album.slice(0, 10);
         this.newalbums = res.data.weekData.slice(0, 10);
       });
     },
-
-    goToPlayList(sId) {
+    goToPlayList (sId) {
+      // 解决歌单页面跳转无法请求得问题
+      this.$store.commit("changePlayListId", sId);
       this.$router.push({
         name: "playlist",
         params: {
@@ -166,8 +159,18 @@ export default {
         }
       });
     },
+    gotoHomeSong (id, type, title) {
+      this.$router.push({
+        name: "homePlay",
+        query: {
+          targetId: id,
+          targetType: type,
+          typeTitle: title
+        }
+      });
+    },
 
-    handleClick() {
+    handleClick () {
       console.log("a");
     }
   }
@@ -182,11 +185,16 @@ ul {
   overflow-y: scroll;
   height: 1200px;
   width: 100%;
+  color: #fff;
+  min-width: 1420px;
 
   /* margin: 0 200px; */
 }
 .more {
   right: 0;
+}
+.el-menu-demo {
+  color: #fff;
 }
 .suggestion-title {
   height: 40px;
@@ -202,11 +210,11 @@ ul {
 .main-content {
   width: 100%;
   height: auto;
-  border: 1px solid #ccc;
+  /* border: 1px solid #ccc; */
 }
 .suggestion-sing {
   margin: 0 200px;
-  border: 1px solid #ccc;
+  /* border: 1px solid #ccc; */
   height: 100%;
   float: left;
 }
@@ -218,8 +226,8 @@ ul {
   padding: 0 150px;
   width: 100%;
   height: auto;
-  border-bottom: 1px solid #333;
-  background-color: #333;
+  /* border-bottom: 1px solid #333; */
+  background-color: #1e131d;
 }
 .hot-sug {
   width: 100%;
@@ -239,7 +247,7 @@ ul {
 .sug-sings {
   width: 150px;
   height: 200px;
-  border: 1px solid #000;
+  /* border: 1px solid #000; */
   margin-left: 20px;
 
   margin-bottom: 5px;

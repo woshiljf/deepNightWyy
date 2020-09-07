@@ -76,7 +76,7 @@ const user = {
                             resolve(response);
                         }
                         if (response.data.token) {
-                            console.log(response);
+                            // console.log('用户信息', response);
                             var loginName = response.data.profile.nickname;
                             var userId = response.data.account.id;
                             console.log("dh", response);

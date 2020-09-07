@@ -7,7 +7,13 @@ const MyTest = {
         playList: [],
         nowPlayId: 0,
         playButtonIndex: 0,
-        playbarshowOrHidden: true
+        playbarshowOrHidden: true,
+        playListId: 0,
+        prePlayListId: 0, //记录前一个歌单id,
+        searchOutCome: null,
+        searchInfo: {},
+        stronger: false
+
     },
 
     // mutations 主要的作用是对state的状态进行修改的,不能直接修改state的属性值
@@ -37,7 +43,24 @@ const MyTest = {
         },
         changeShowOrHidden(state, b) {
             state.playbarshowOrHidden = b;
-        }
+        },
+        changePlayListId(state, sid) {
+            state.playListId = sid;
+        },
+        changePrePlayListId(state, sId) {
+            state.prePlayListId = sId;
+        },
+        changeSearchOutCome(state, outcome) {
+            state.searchOutCome = outcome
+        },
+        changeSearchInfo(state, outcome) {
+
+            state.searchInfo = outcome
+        },
+        changeStronger(state, f) {
+
+            state.stronger = f
+        },
     },
     // 主要处理一些异步请求，请求回来的数据，重新改变state的属性，在经过mutations来改变
     actions: {

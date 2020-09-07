@@ -25,3 +25,29 @@ export function getPlayListDetail(uid) {
         params: id
     });
 }
+// /simi/playlist?id=347230
+
+// 获取相似歌单
+export function getSimiPlayList(uid) {
+    const id = {
+        id: uid
+    };
+    return request({
+        url: "api/simi/playlist",
+        method: "get",
+        params: id
+    });
+}
+
+// /related/playlist?id=1
+
+export function getRelatedPlayList(uid) {
+    const id = {
+        id: uid
+    };
+    return request({
+        url: "api/related/playlist",
+        method: "get",
+        params: id
+    });
+}

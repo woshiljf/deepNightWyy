@@ -3,22 +3,23 @@ import VueRouter from "vue-router";
 
 // 引入组件
 
-import login from "../page/login/index.vue";
+import login from "@/page/login/index.vue";
 // import home from '../page/home.vue'
-import dashboard from "../page/dashboard/index.vue";
-import notFound from "../page/errorPage/404.vue";
+// import dashboard from "../page/dashboard/index.vue";
+import notFound from "@/page/errorPage/404.vue";
 
-import home from "../page/layout/layout.vue";
+import home from "@/page/layout/layout.vue";
 
-import MyMusic from "../page/mymusic/index.vue";
-import MyFrends from "../page/MyFrends/index.vue";
-import playSing from "../page/mymusic/playForm.vue";
-import ShopCity from "../page/shopCity/index.vue";
-import MusicPerson from "../page/musicPerson/index.vue";
-import mvDetail from "../page/mymusic/mvDetail.vue";
+import MyMusic from "@/page/mymusic/index.vue";
+import MyFrends from "@/page/MyFrends/index.vue";
+import playSing from "@/page/mymusic/playForm.vue";
+import ShopCity from "@/page/shopCity/index.vue";
+import MusicPerson from "@/page/musicPerson/index.vue";
+import mvDetail from "@/page/mymusic/mvDetail.vue";
+import SearchDash from "@/page/searchDash/index.vue"
+import playList from "@/page/playList/index.vue";
 
-import playList from "../page/playList/index.vue";
-
+import homePlay from "@/page/lunboSong/index.vue";
 // 要告诉 vue 使用 vueRouter
 Vue.use(VueRouter);
 
@@ -65,7 +66,7 @@ let routes = [{
             path: "/dashboard",
             name: "网易云首页2",
             component: () =>
-                import ( /*webpackChunkName:'importDashboard',webpackPrefetch: true*/ "../page/dashboard/index.vue"),
+                import ( /*webpackChunkName:'importDashboard',webpackPrefetch: true*/ "@/page/dashboard/index.vue"),
             meta: {
                 keepAlive: true // 不需要缓存
             }
@@ -143,7 +144,25 @@ let routes = [{
             name: "playlist",
             component: playList,
             meta: {
-                keepAlive: true // 不需要缓存
+                keepAlive: true
+            },
+            hidden: true
+        }]
+    },
+
+    {
+        path: "homePlay1",
+        component: home,
+        name: "homePlay2",
+        meta: {
+            keepAlive: true
+        },
+        children: [{
+            path: "/homePlay",
+            name: "homePlay",
+            component: homePlay,
+            meta: {
+                keepAlive: true
             },
             hidden: true
         }]
@@ -168,6 +187,33 @@ let routes = [{
             hidden: true
         }]
     },
+
+    // 搜索面板
+
+    {
+        path: "searchbox",
+        component: home,
+        single: true,
+        name: "search",
+        meta: {
+            keepAlive: true // 不需要缓存
+        },
+        iconCls: "el-icon-s-home", //图标样式class
+        children: [{
+            path: "/searchDash",
+            name: "searchDash",
+            component: SearchDash,
+            meta: {
+                keepAlive: true // 不需要缓存
+            },
+            hidden: true
+        }]
+    },
+
+
+
+
+
 
     {
         path: "shopCity",

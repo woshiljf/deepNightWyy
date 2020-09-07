@@ -99,10 +99,11 @@ body {
   padding: 0;
   min-width: 1200px;
   // min-height: 1000px;
-  background: #f5f5f5;
+  background: #1e131d;
   font-size: 14px;
   -webkit-font-smoothing: antialiased;
   overflow: auto;
+  color: #fff;
 }
 .playBar {
   width: 100%;

@@ -7,35 +7,28 @@
       </div>
 
       <div class="navmenue">
-        <el-menu
-          :default-active="activeIndex2"
-          class="el-menu-demo"
-          mode="horizontal"
-          @select="handleSelect"
-          background-color="#333333"
-          text-color="#fff"
-          active-text-color="#ffd04b"
-        >
+        <el-menu :default-active="activeIndex2" class="el-menu-demo" mode="horizontal" @select="handleSelect"
+          background-color="#333333" text-color="#fff" active-text-color="#ffd04b">
           <el-menu-item index="1" @click="findMusic"> 发现音乐 </el-menu-item>
-          <el-menu-item index="2" @click="myMusicHandle"
-            >我的音乐
+          <el-menu-item index="2" @click="myMusicHandle">我的音乐
           </el-menu-item>
           <el-menu-item index="3" @click="frendsHandle">朋友</el-menu-item>
-          <el-menu-item index="4" @click="shopHandle">商城</el-menu-item>
-          <el-menu-item index="5" @click="musicPersonHandle"
-            >音乐人</el-menu-item
-          >
+          <el-menu-item index="4" @click="shopHandle">
+            商城
+          </el-menu-item>
+          <el-menu-item index="5" @click="musicPersonHandle">音乐人</el-menu-item>
           <el-menu-item index="6" @click="downLoad">深夜鬼故事</el-menu-item>
         </el-menu>
       </div>
       <div>
         <div class="search">
-          <input
-            type="text"
-            class="search-box"
-            placeholder="音乐/视频/电台/用户"
-          />
+          <input type="text" class="search-box" v-model="searchKewords" placeholder="音乐/视频/电台/用户"
+            @keyup.enter="handlekey()" />
         </div>
+        <!-- 搜索面板开始 -->
+
+        <!-- 搜索面板结束 -->
+
         <div class="user-center">
           <el-button type="primary" round>创作者中心</el-button>
         </div>
@@ -44,9 +37,7 @@
         <img :src="userImg" alt="" class="imgamure" />
         <span class="name"> {{ sysUserName }}</span>
         <el-dropdown trigger="hover">
-          <span
-            class="el-dropdown-link userinfo-inner el-icon-caret-bottom"
-          ></span>
+          <span class="el-dropdown-link userinfo-inner el-icon-caret-bottom"></span>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item>我的主页</el-dropdown-item>
             <el-dropdown-item>我的消息</el-dropdown-item>
@@ -54,9 +45,7 @@
             <el-dropdown-item>VIP会员</el-dropdown-item>
             <el-dropdown-item>个人设置</el-dropdown-item>
             <el-dropdown-item>实名认证</el-dropdown-item>
-            <el-dropdown-item divided @click.native="logoutFun"
-              >退出登录</el-dropdown-item
-            >
+            <el-dropdown-item divided @click.native="logoutFun">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </div>
@@ -64,16 +53,26 @@
   </div>
 </template>
 <script>
+
 import { mapGetters, mapState } from "vuex";
+import { getSearchSug, getCloundSearch } from '@/api/searchApi'
+import SearchDash from './searchDash'
 export default {
   name: "Head",
-  data() {
+
+  data () {
     return {
       sysName: "网抑云音乐",
       sysUserName: "",
       treeArry: [],
       arry: [],
-      activeIndex2: "1"
+      activeIndex2: "1",
+      searchKewords: '',
+      searchFlag: true,
+      searchSongs: [],
+      searchAlbums: [],
+      searchArtists: [],
+      order: [],
     };
   },
   computed: {
@@ -81,7 +80,13 @@ export default {
       userImg: state => state.user.userAvatarUrl
     })
   },
-  mounted() {
+  watch: {
+    searchKewords: function (newText, oldText) {
+      this.getSearchContent(newText)
+    }
+  },
+
+  mounted () {
     var user = sessionStorage.getItem("user");
     if (user) {
       user = JSON.parse(user);
@@ -89,7 +94,7 @@ export default {
     }
   },
   methods: {
-    logoutFun: function() {
+    logoutFun: function () {
       var _this = this;
       this.$confirm("确认退出吗?", "提示", {
         type: "warning"
@@ -102,29 +107,95 @@ export default {
             this.$store.commit("clearRouters");
           });
         })
-        .catch(() => {});
+        .catch(() => { });
     },
-    myMusicHandle() {
+    myMusicHandle () {
       this.$router.push({ path: "/mymusic" });
     },
-    findMusic() {
+    findMusic () {
       this.$router.push({ path: "/" });
     },
-    frendsHandle() {
+    frendsHandle () {
       this.$router.push({ path: "/myfrends" });
     },
-    shopHandle() {
+    shopHandle () {
       this.$router.push({ path: "/shopcity" });
     },
-    musicPersonHandle() {
+    musicPersonHandle () {
       this.$router.push({ path: "/musicPerson" });
     },
-    downLoad() {},
-    handleSelect() {
-      console.log("handleSelect");
-    }
+
+    handleSelect () {
+    },
+
+    downLoad () { },
+    handlekey (e) {
+      if (this.searchKewords == '') {
+        return
+      }
+      var obj = {
+        searchSongs: [],
+        searchAlbums: [],
+        searchArtists: [],
+        order: [],
+        isShow: false
+      }
+      this.$store.commit('changeSearchInfo', obj)
+      var p = {
+        keywords: this.searchKewords
+      }
+      getCloundSearch(p).then(res => {
+        res.data.result.keywords = this.searchKewords
+        this.$store.commit('changeSearchOutCome', res.data.result)
+
+        this.$router.push({ path: "/searchDash" });
+      }).catch(err => {
+        console.log(err)
+      }).finally(e => {
+        this.$router.push({ path: "/searchDash" });
+      })
+    },
+    // 搜索数据开始
+    getSearchContent (text) {
+
+      if (text == '') {
+        var obj = {
+          searchSongs: [],
+          searchAlbums: [],
+          searchArtists: [],
+          order: [],
+          isShow: false
+        }
+        this.$store.commit('changeSearchInfo', obj)
+        return
+      }
+      this.searchFlag = true
+      getSearchSug(text).then(res => {
+        if (Object.keys(res.data.result).length == 0) {
+          return
+        }
+        // 保存数据
+        var searchSongs = res.data.result.songs
+        var searchAlbums = res.data.result.albums
+        var searchArtists = res.data.result.artists
+        var order = res.data.result.order
+        var obj = {
+          searchSongs,
+          searchAlbums,
+          searchArtists,
+          order,
+          isShow: this.searchFlag
+        }
+
+        this.$store.commit('changeSearchInfo', obj)
+      })
+    },
+
+
+
+
   },
-  created() {
+  created () {
     if (this.userName) {
       this.sysUserName = this.userName;
     } else {
@@ -136,6 +207,7 @@ export default {
 <style scoped>
 .container-header {
   height: 70px;
+  min-width: 1420px;
   width: 100%;
   background-color: #333;
   position: relative;
@@ -173,6 +245,7 @@ export default {
 .search {
   position: absolute;
   left: 900px;
+  z-index: 100000;
 }
 .search-box {
   width: 200px;
@@ -206,5 +279,11 @@ export default {
 .el-menu--horizontal > .el-submenu .el-submenu__title {
   height: 70px;
   line-height: 70px;
+}
+.outcome {
+  position: absolute;
+  top: 20px;
+  left: 500px;
+  z-index: 1000;
 }
 </style>

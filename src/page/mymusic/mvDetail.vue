@@ -1,16 +1,11 @@
 <template>
   <div class="myMusic-container">
-    <div style="height: auto; border: 1px solid #eee" class="container-content">
+    <div style="height: auto; border-left: 1px solid #eee;border-right: 1px solid #eee" class="container-content">
       <div class="content-left">
         <div style="height: auto">
           <div class="lrc">
             <h2 style="padding: 0;margin:0">{{ mvInfo.title }}</h2>
-            <video
-              :src="myMvurl"
-              width="100%"
-              height="auto"
-              controls="controls"
-            >
+            <video :src="myMvurl" width="100%" height="max-height: 830px;" controls="controls">
               Your browser does not support the video tag.
             </video>
           </div>
@@ -29,28 +24,13 @@
               <el-card class="box-card">
                 <div class="commentText">
                   <div class="img">
-                    <img
-                      :src="userImg"
-                      alt=""
-                      style="width: 50px;height: 50px"
-                    />
+                    <img :src="userImg" alt="" style="width: 50px;height: 50px" />
                   </div>
                   <div class="my-comment">
-                    <el-input
-                      type="textarea"
-                      :rows="2"
-                      placeholder="评论"
-                      v-model="textarea"
-                      style="width: 100%"
-                    >
+                    <el-input type="textarea" :rows="2" placeholder="评论" v-model="textarea" style="width: 100%">
                     </el-input>
                     <div class="commentclick">
-                      <el-button
-                        type="primary"
-                        size="mini"
-                        @click="submitMyComment"
-                        >评论</el-button
-                      >
+                      <el-button type="primary" size="mini" @click="submitMyComment">评论</el-button>
                     </div>
                   </div>
                 </div>
@@ -58,17 +38,9 @@
             </div>
 
             <div class="comment-content" v-loading="comentLoading">
-              <el-card
-                class="box-card"
-                v-for="item in singComment"
-                :key="item.commentId"
-              >
+              <el-card class="box-card" v-for="item in singComment" :key="item.commentId">
                 <div class="img">
-                  <img
-                    :src="item.user.avatarUrl"
-                    alt=""
-                    style="width: 100px;height: 100px"
-                  />
+                  <img :src="item.user.avatarUrl" alt="" style="width: 100px;height: 100px" />
                 </div>
                 <div class="comment">
                   <p>
@@ -79,29 +51,13 @@
                 </div>
 
                 <div class="anwser">
-                  <el-button
-                    type="danger"
-                    size="mini"
-                    @click="anwserHandle(item.commentId);"
-                    >回复</el-button
-                  >
+                  <el-button type="danger" size="mini" @click="anwserHandle(item.commentId);">回复</el-button>
                 </div>
                 <div class="my-comment" v-if="item.commentId == commentIndex">
-                  <el-input
-                    type="textarea"
-                    :rows="2"
-                    placeholder="回复"
-                    v-model="textarea2"
-                    style="width: 100%"
-                  >
+                  <el-input type="textarea" :rows="2" placeholder="回复" v-model="textarea2" style="width: 100%">
                   </el-input>
                   <div class="commentclick">
-                    <el-button
-                      type="primary"
-                      size="mini"
-                      @click="answerMyComment(item.commentId);"
-                      >评论</el-button
-                    >
+                    <el-button type="primary" size="mini" @click="answerMyComment(item.commentId);">评论</el-button>
                   </div>
                 </div>
               </el-card>
@@ -109,15 +65,9 @@
 
             <el-card class="box-card">
               <div class="pagination">
-                <el-pagination
-                  background
-                  layout="total, sizes, prev, pager, next, jumper"
-                  :total="total"
-                  :page-sizes="[10, 20, 30, 40, 50]"
-                  @size-change="sizeChange"
-                  @next-click="nextClick"
-                  @current-change="currentChange"
-                >
+                <el-pagination background layout="total, sizes, prev, pager, next, jumper" :total="total"
+                  :page-sizes="[10, 20, 30, 40, 50]" @size-change="sizeChange" @next-click="nextClick"
+                  @current-change="currentChange">
                 </el-pagination>
               </div>
             </el-card>
@@ -130,28 +80,15 @@
           <hr />
           <div class="simi-content">
             <ul style="list-style: none;padding:0;margin: 0">
-              <li
-                v-for="(item, index) in realatedMv"
-                :key="index"
-                class="title-li"
-              >
+              <li v-for="(item, index) in realatedMv" :key="index" class="title-li">
                 <div class="simi-content">
                   <div style="margin-right: 5px">
-                    <img
-                      :src="item.coverUrl"
-                      alt=""
-                      style="width:70px;height: 50px"
-                    />
+                    <img :src="item.coverUrl" alt="" style="width:70px;height: 50px" />
                   </div>
                   <div class="content-title">
                     <!-- <p>{{ item.title }}</p> -->
-                    <span
-                      @click="playSong(item.vid);"
-                      :loading="item.id === loadIndex"
-                      class="play-class"
-                    >
-                      {{ item.title }}</span
-                    >
+                    <span @click="playSong(item.vid);" :loading="item.id === loadIndex" class="play-class">
+                      {{ item.title }}</span>
                   </div>
                 </div>
               </li>
@@ -160,21 +97,16 @@
         </div>
 
         <div class="two">
-          <h3>相似的歌曲</h3>
+          <h3></h3>
           <hr />
           <div class="simi-content">
             <ul style="list-style: none;padding:0;margin: 0">
               <li v-for="(item, index) in simiPlaysongs" :key="index">
                 <div class="comment">
-                  <div
-                    style="padding: 0;margin: 5px 0px;display:flex;justify-content: space-between;"
-                  >
+                  <div style="padding: 0;margin: 5px 0px;display:flex;justify-content: space-between;">
                     <span> {{ item.name }}</span>
-                    <span
-                      @click="playSong(item.id);"
-                      :loading="item.id === loadIndex"
-                      ><i class="el-icon-caret-right"></i
-                    ></span>
+                    <span @click="playSong(item.id);" :loading="item.id === loadIndex"><i
+                        class="el-icon-caret-right"></i></span>
                   </div>
                   <p style="padding: 0;margin: 0;color: #666">
                     {{ item.artists[0].name }}
@@ -202,7 +134,7 @@ export default {
   components: {
     Scroll
   },
-  data() {
+  data () {
     return {
       id: this.$route.params.id,
       geci: "",
@@ -227,7 +159,7 @@ export default {
   },
   watch: {
     // 监听路由变化
-    $route: function(to, from) {
+    $route: function (to, from) {
       // this.getComment()
       // this.getLrc()
     }
@@ -238,7 +170,7 @@ export default {
     })
   },
   filters: {
-    formatDate: function(time) {
+    formatDate: function (time) {
       var now = new Date(time);
       var year = now.getFullYear(); //取得4位数的年份
       var month = now.getMonth() + 1; //取得日期中的月份，其中0表示1月，11表示12月
@@ -261,18 +193,18 @@ export default {
       );
     }
   },
-  mounted() {
+  mounted () {
     this.firstGetInfo();
     // this.getsimiInfo();
   },
   methods: {
-    firstGetInfo() {
+    firstGetInfo () {
       this.getMvUrl();
       this.getMvInfo();
       this.getSameMv();
       this.getComment();
     },
-    getSameMv() {
+    getSameMv () {
       var mid = this.id;
       getRelatedMv(mid).then(res => {
         this.realatedMv = res.data.data;
@@ -280,7 +212,7 @@ export default {
       });
     },
 
-    getComment() {
+    getComment () {
       var params = {
         id: this.id,
         limit: this.pageSize,
@@ -296,7 +228,7 @@ export default {
         this.total = res.data.total;
       });
     },
-    getMvUrl() {
+    getMvUrl () {
       var params = {
         id: this.id
       };
@@ -308,34 +240,34 @@ export default {
         .catch(e => {
           console.log(e);
         })
-        .finally(e => {});
+        .finally(e => { });
     },
     //
 
-    getMvInfo() {
+    getMvInfo () {
       var id = this.id;
       getMvDetail(id).then(res => {
         this.mvInfo = res.data.data;
       });
     },
-    sizeChange(data) {
+    sizeChange (data) {
       this.pageSize = data;
       this.getComment();
     },
-    nextClick(p) {
+    nextClick (p) {
       this.offset = p;
       // 下一页
       this.flag = false;
       this.getComment();
     },
-    currentChange(p) {
+    currentChange (p) {
       if (this.flag) {
         this.offset = p;
         this.getComment();
       }
       this.flag = true;
     },
-    getsimiInfo() {
+    getsimiInfo () {
       var params = {
         id: this.$route.params.id
       };
@@ -346,7 +278,7 @@ export default {
         }
       );
     },
-    playSong(songid) {
+    playSong (songid) {
       this.loadIndex = songid;
       var params = {
         id: songid
@@ -360,7 +292,7 @@ export default {
       this.getSameMv();
       this.getComment();
     },
-    commentHandle(params) {
+    commentHandle (params) {
       if (params.content == "") {
         this.$message({
           type: "warning",
@@ -381,10 +313,10 @@ export default {
         }
       });
     },
-    anwserHandle(commentId) {
+    anwserHandle (commentId) {
       this.commentIndex = commentId;
     },
-    submitMyComment() {
+    submitMyComment () {
       var params = {
         id: this.id,
         content: this.textarea,
@@ -392,7 +324,7 @@ export default {
       };
       this.commentHandle(params);
     },
-    answerMyComment(commentId) {
+    answerMyComment (commentId) {
       var params = {
         t: 2,
         id: this.id,
@@ -405,7 +337,7 @@ export default {
   },
   // 组件导航钩子
 
-  beforeRouteEnter(to, from, next) {
+  beforeRouteEnter (to, from, next) {
     next();
   }
 };
@@ -455,7 +387,7 @@ export default {
 
 .content-left {
   width: 100%;
-  border-right: 1px solid #ccc;
+  /* border-right: 1px solid #ccc; */
   padding: 0 20px;
 }
 

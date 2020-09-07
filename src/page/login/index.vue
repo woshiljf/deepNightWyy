@@ -1,14 +1,45 @@
 <template>
   <div class="login-box">
-    <div class="login-page-container bounceToDown">
+
+    <div class="loginText">
+
+      <h1 style="--x: 6; --y: -6;">
+        <span style="--index: 0; --alpha-l: 0.125; --alpha-u: 0.25;">深</span>
+        <span style="--index: 1; --alpha-l: 0.125; --alpha-u: 0.25;">夜</span>
+        <span style="--index: 2; --alpha-l: 0.125; --alpha-u: 0.25;">网</span>
+        <span style="--index: 3; --alpha-l: 0.125; --alpha-u: 0.25;">抑</span>
+        <span style="--index: 4; --alpha-l: 0.125; --alpha-u: 0.25;">云</span>
+        <span style="--index: 5; --alpha-l: 0.125; --alpha-u: 0.25;"></span>
+      </h1>
+
+      <!-- <h1 style="--x: 3; --y: -3;">
+        <span style="--index: 0; --alpha-l: 0.25; --alpha-u: 0.5;">深</span><span
+          style="--index: 1; --alpha-l: 0.25; --alpha-u: 0.5;">夜</span><span
+          style="--index: 2; --alpha-l: 0.25; --alpha-u: 0.5;">网</span><span
+          style="--index: 3; --alpha-l: 0.25; --alpha-u: 0.5;">抑</span><span
+          style="--index: 4; --alpha-l: 0.25; --alpha-u: 0.5;">云</span><span
+          style="--index: 5; --alpha-l: 0.25; --alpha-u: 0.5;"></span>
+      </h1> -->
+
+      <h1>
+        <span style="--index: 0; --alpha-l: 0.5; --alpha-u: 1;">深</span><span
+          style="--index: 1; --alpha-l: 0.5; --alpha-u: 1;">夜</span><span
+          style="--index: 2; --alpha-l: 0.5; --alpha-u: 1;">网</span><span
+          style="--index: 3; --alpha-l: 0.5; --alpha-u: 1;">抑</span><span
+          style="--index: 4; --alpha-l: 0.5; --alpha-u: 1;">云</span><span
+          style="--index: 5; --alpha-l: 0.5; --alpha-u: 1;"></span>
+      </h1>
+
+    </div>
+
+    <div class="bounceToDown loginBox">
       <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-position="left" label-width="0px"
         class="demo-ruleForm login-container">
-        <h1 class="title" style="color: #ffffff;padding-left: 130px">深夜网抑云</h1>
         <el-form-item prop="account">
           <!-- el-icon-user-solid -->
           <label for="phone">
             <span style="color: #ffffff">手机号:</span>
-            <el-input type="text" v-model="ruleForm2.account" placeholder="请输入用户名" autocomplete="on" id="phone" />
+            <el-input type="text" v-model="ruleForm2.account" placeholder="请输入手机号" autocomplete="on" id="phone" />
             <span class="show-pwd">
               <i class="el-icon-user-solid" />
             </span>
@@ -30,8 +61,15 @@
         <el-form-item style="width:100%;">
           <el-button type="primary" style="width:100%;" @click="login" :loading="logining">登录</el-button>
         </el-form-item>
+
+        <div class="register" style="width: 100%">
+          <el-button type="danger" size="mini" :loading="dirloginLoad" @click="directLogin">直接听歌</el-button>
+        </div>
+
       </el-form>
+
     </div>
+
   </div>
 </template>
 
@@ -46,6 +84,7 @@ export default {
   data () {
     return {
       logining: false,
+      dirloginLoad: false,
       ruleForm2: {
         account: "",
         checkPass: ""
@@ -76,22 +115,26 @@ export default {
       this.ruleForm2.account = localStorage.getItem('userName');
       this.ruleForm2.checkPass = localStorage.getItem('password');
     }
+
+    var iSstranger = true
+    sessionStorage.setItem("stranger", JSON.stringify({ iSstranger }));
+
+
   },
   methods: {
     login () {
       this.$refs.ruleForm2.validate(valid => {
         if (valid) {
-          console.log('登录了吗');
           this.logining = true
           const params = {
             userCode: this.ruleForm2.account,
             password: this.ruleForm2.checkPass
           }
-          const loginLoading = this.$loading({
-            lock: true,
-            text: '登录中,请稍后。。。',
-            spinner: "el-icon-loading"
-          });
+          // const loginLoading = this.$loading({
+          //   lock: true,
+          //   text: '登录中,请稍后。。。',
+          //   spinner: "el-icon-loading"
+          // });
           // 登录请求
           this.$store.dispatch('LoginByUsername', params).then((res) => {
             if (!getToken()) {
@@ -101,11 +144,15 @@ export default {
                 type: 'error',
                 duration: 2000
               })
-              loginLoading.close()
+              // loginLoading.close()
               return
             }
+            // 不是陌生人
+            var iSstranger = false
+            sessionStorage.setItem("stranger", JSON.stringify({ iSstranger }));
+            this.$store.commit('changeStronger', false)
             this.logining = false
-            loginLoading.close()
+            // loginLoading.close()
             this.$router.push({ path: "/" })  // 去主页
           }).catch((error) => {
             console.log(error)
@@ -118,7 +165,7 @@ export default {
             }
           }).finally(() => {
             this.logining = false
-            loginLoading.close()
+            // loginLoading.close()
           })
         } else {
           this.logining = false
@@ -135,20 +182,55 @@ export default {
         this.passwordType = 'password'
       }
     },
+    directLogin () {
+      // 陌生人登录
+      var loginName = '抑郁少年'
+      sessionStorage.setItem("user", JSON.stringify({ loginName }));
+      this.dirloginLoad = true
+      setTimeout(() => {
+        this.dirloginLoad = false
+        this.$router.push({ path: "/" })
+      }, 2000);
+      this.$store.commit('changeStronger', true)
+    }
   }
 };
 </script>
 
 <style lang="scss">
 @import "../../assets/css/them.scss";
+@import "../../assets/css/style.css";
 .login-box {
   width: 100%;
   height: 100%;
   position: fixed;
   left: 0;
   top: 0;
-  background-color: $globalBgColor;
+  background-image: url("../../assets/img/4.png");
+  background-size: auto;
 }
+
+.loginBox {
+  opacity: 0.3;
+  transition: all 2s;
+}
+.text-header {
+  font: 5em Brush Script MT;
+  color: #a5536a;
+  text-shadow: -4px -2px 0 #fff;
+}
+.register {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  /* display: flex; */
+  -webkit-box-pack: end;
+  -ms-flex-pack: end;
+  justify-content: end;
+}
+.loginBox:hover {
+  opacity: 0.8;
+}
+
 .login-container {
   -webkit-border-radius: 5px;
   border-radius: 5px;
@@ -157,9 +239,8 @@ export default {
   margin: 180px auto;
   width: 500px;
   padding: 35px 35px 15px;
-  background: #333;
-  border: 1px solid #eaeaea;
-  // box-shadow: 0 0 25px #cac6c6;
+  // background: #333;
+  background-color: rgba(0, 0, 0, 0.376);
 }
 .show-pwd {
   position: absolute;

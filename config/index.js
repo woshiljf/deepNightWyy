@@ -11,8 +11,8 @@ module.exports = {
         assetsPublicPath: "/",
         proxyTable: {
             "/api": {
-                target: "http://3362u865n6.zicp.vip",
-                // target: 'http://10.65.2.40:8087',   // 张某某
+                target: "http://i33628o656.eicp.vip/",
+                // target: "http://123.207.32.32:9001", // 张某某
                 // target: 'http://10.65.1.105:8087',  // 某某某
                 // target: 'http://v.juhe.cn/toutiao/index', // 测试端口
                 // target: 'http://10.65.6.1:8187', // 开发端口

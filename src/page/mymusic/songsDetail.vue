@@ -86,11 +86,8 @@ import { mapState } from "vuex";
 export default {
   data() {
     return {
-      singInformation: "",
       index: "",
-      drawer: false,
       flag: true,
-      selectedArr: {},
       showColor: 0
     };
   },

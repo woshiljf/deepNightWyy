@@ -9,43 +9,38 @@
   </div>
 </template>
 <script>
-import { mapGetters, mapMutations } from 'vuex'
-import { getHomePage } from '../../../api/homepage.js'
+import { mapGetters, mapMutations } from "vuex";
+import { getHomePage } from "../../../api/homepage.js";
 export default {
-  name: 'Content',
-  components: {
-  },
+  name: "Content",
+  components: {},
   data () {
     return {
-      activepath: '',
-    }
+      activepath: ""
+    };
   },
   watch: {
     $route (to, from) {
-      this.activepath = to.path
+      this.activepath = to.path;
     }
   },
   created () {
-    this.getHomeInfor()
+    this.getHomeInfor();
   },
   mounted () {
     //首次添加router
   },
   methods: {
-
     getHomeInfor () {
-      getHomePage().then(res => {
-        // console.log(res.data.blocks)
-        this.singinfo = res.data.blocks
-
-      }).catch(e => {
-
-      })
-
+      getHomePage()
+        .then(res => {
+          // console.log(res.data.blocks)
+          this.singinfo = res.data.blocks;
+        })
+        .catch(e => { });
     }
-
   }
-}
+};
 </script>
 <style scoped lang="scss">
 .contentMain {
@@ -69,8 +64,8 @@ export default {
   text-align: center;
 }
 .suggestion {
-  border-left: 1px solid #ccc;
-  border-right: 1px solid #ccc;
+  // border-left: 1px solid #ccc;
+  // border-right: 1px solid #ccc;
 }
 .carousel {
   text-align: center;

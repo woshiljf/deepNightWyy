@@ -29,8 +29,38 @@ export function getSimPlaysings(id) {
         params: id
     });
 }
+
+// 专辑
+export function getalubmInfo(id) {
+    return request({
+        url: "api/album",
+        method: "get",
+        params: id
+    });
+}
+
 // 评论歌曲
 // /comment
+/**
+ * 
+ * @param {*} info 
+ * 
+ * id : 资源 id
+
+tpye: 数字 , 资源类型 , 对应歌曲 , mv, 专辑 , 歌单 , 电台, 视频对应以下类型
+
+0: 歌曲
+
+1: mv
+
+2: 歌单
+
+3: 专辑
+
+4: 电台
+
+5: 视频
+ */
 export function submitComment(info) {
     var obj = {
         t: 1,
@@ -41,6 +71,19 @@ export function submitComment(info) {
     obj = Object.assign(obj, info);
     return request({
         url: "api/comment",
+        method: "get",
+        params: obj
+    });
+}
+// 获取专辑评论/comment/album
+
+export function getCommentAlbum(id) {
+    var obj = {
+        id
+    };
+
+    return request({
+        url: "api/comment/album",
         method: "get",
         params: obj
     });
