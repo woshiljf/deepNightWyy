@@ -154,6 +154,12 @@ export default {
             this.logining = false
             // loginLoading.close()
             this.$router.push({ path: "/" })  // 去主页
+            this.$message({
+              message: '晚上好，小宝贝',
+              type: 'success',
+              duration: 3 * 1000
+            })
+
           }).catch((error) => {
             console.log(error)
             if (error.response) {

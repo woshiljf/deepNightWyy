@@ -33,7 +33,8 @@ export default {
       isShow: false,
       searchSongs: [],
       searchArtists: [],
-      searchAlbums: []
+      searchAlbums: [],
+
     }
   },
   created () {
@@ -47,9 +48,8 @@ export default {
   },
   watch: {
     SearchData: function (newV, oldV) {
-      console.log('执行了吗')
+
       this.isShow = this.SearchData.isShow
-      console.log('显示', this.isShow)
       this.searchSongs = this.SearchData.searchSongs
       this.searchArtists = this.SearchData.searchArtists
       this.searchAlbums = this.SearchData.searchAlbums
@@ -58,15 +58,7 @@ export default {
 
 
   methods: {
-    handleClose (done) {
-      this.$confirm('确认关闭？')
-        .then(_ => {
-          this.$store.commit('SET_PLAYSTATS', false)
 
-          done();
-        })
-        .catch(_ => { });
-    }
   }
 }
 </script>

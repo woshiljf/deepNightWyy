@@ -82,7 +82,9 @@ const user = {
                             console.log("dh", response);
 
                             sessionStorage.setItem("user", JSON.stringify({ loginName }));
+
                             sessionStorage.setItem("userId", JSON.stringify({ userId }));
+
                             commit("SET_USERAvatarUrl", response.data.profile.avatarUrl);
                             commit("SET_USERID", response.data.profile.userId);
                             commit("SET_TOKEN", response.data.token);

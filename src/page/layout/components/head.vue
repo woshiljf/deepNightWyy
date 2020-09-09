@@ -13,17 +13,15 @@
           <el-menu-item index="2" @click="myMusicHandle">我的音乐
           </el-menu-item>
           <el-menu-item index="3" @click="frendsHandle">朋友</el-menu-item>
-          <el-menu-item index="4" @click="shopHandle">
-            商城
-          </el-menu-item>
+          <el-menu-item index="4" @click="shopHandle"> 商城 </el-menu-item>
           <el-menu-item index="5" @click="musicPersonHandle">音乐人</el-menu-item>
-          <el-menu-item index="6" @click="downLoad">深夜鬼故事</el-menu-item>
+          <el-menu-item index="6" @click="downLoad">抑郁时刻</el-menu-item>
         </el-menu>
       </div>
       <div>
         <div class="search">
           <input type="text" class="search-box" v-model="searchKewords" placeholder="音乐/视频/电台/用户"
-            @keyup.enter="handlekey()" />
+            @keyup.enter="handlekey();" />
         </div>
         <!-- 搜索面板开始 -->
 
@@ -39,7 +37,9 @@
         <el-dropdown trigger="hover">
           <span class="el-dropdown-link userinfo-inner el-icon-caret-bottom"></span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>我的主页</el-dropdown-item>
+            <el-dropdown-item>
+              <router-link :to="{path:'/myHome'}">我的主页</router-link>
+            </el-dropdown-item>
             <el-dropdown-item>我的消息</el-dropdown-item>
             <el-dropdown-item>我等级</el-dropdown-item>
             <el-dropdown-item>VIP会员</el-dropdown-item>
@@ -53,10 +53,9 @@
   </div>
 </template>
 <script>
-
 import { mapGetters, mapState } from "vuex";
-import { getSearchSug, getCloundSearch } from '@/api/searchApi'
-import SearchDash from './searchDash'
+import { getSearchSug, getCloundSearch } from "@/api/searchApi";
+import SearchDash from "./searchDash";
 export default {
   name: "Head",
 
@@ -67,22 +66,23 @@ export default {
       treeArry: [],
       arry: [],
       activeIndex2: "1",
-      searchKewords: '',
+      searchKewords: "",
       searchFlag: true,
       searchSongs: [],
       searchAlbums: [],
       searchArtists: [],
-      order: [],
+      order: []
     };
   },
   computed: {
     ...mapState({
-      userImg: state => state.user.userAvatarUrl
+      userImg: state => state.user.userAvatarUrl,
+      isStranger: state => state.myTest.stronger
     })
   },
   watch: {
     searchKewords: function (newText, oldText) {
-      this.getSearchContent(newText)
+      this.getSearchContent(newText);
     }
   },
 
@@ -111,12 +111,26 @@ export default {
     },
     myMusicHandle () {
       this.$router.push({ path: "/mymusic" });
+      if (this.isStranger == true) {
+        this.$message({
+          message: "你没有登录少年",
+          type: "warning",
+          duration: 2 * 1000
+        });
+      }
     },
     findMusic () {
       this.$router.push({ path: "/" });
     },
     frendsHandle () {
       this.$router.push({ path: "/myfrends" });
+      if (this.isStranger == true) {
+        this.$message({
+          message: "你没有登录少年",
+          type: "warning",
+          duration: 2 * 1000
+        });
+      }
     },
     shopHandle () {
       this.$router.push({ path: "/shopcity" });
@@ -125,13 +139,12 @@ export default {
       this.$router.push({ path: "/musicPerson" });
     },
 
-    handleSelect () {
-    },
+    handleSelect () { },
 
     downLoad () { },
     handlekey (e) {
-      if (this.searchKewords == '') {
-        return
+      if (this.searchKewords == "") {
+        return;
       }
       var obj = {
         searchSongs: [],
@@ -139,61 +152,59 @@ export default {
         searchArtists: [],
         order: [],
         isShow: false
-      }
-      this.$store.commit('changeSearchInfo', obj)
+      };
+      this.$store.commit("changeSearchInfo", obj);
       var p = {
         keywords: this.searchKewords
-      }
-      getCloundSearch(p).then(res => {
-        res.data.result.keywords = this.searchKewords
-        this.$store.commit('changeSearchOutCome', res.data.result)
+      };
+      getCloundSearch(p)
+        .then(res => {
+          res.data.result.keywords = this.searchKewords;
+          this.$store.commit("changeSearchOutCome", res.data.result);
 
-        this.$router.push({ path: "/searchDash" });
-      }).catch(err => {
-        console.log(err)
-      }).finally(e => {
-        this.$router.push({ path: "/searchDash" });
-      })
+          this.$router.push({ path: "/searchDash" });
+        })
+        .catch(err => {
+          console.log(err);
+        })
+        .finally(e => {
+          this.$router.push({ path: "/searchDash" });
+        });
     },
     // 搜索数据开始
     getSearchContent (text) {
-
-      if (text == '') {
+      if (text == "") {
         var obj = {
           searchSongs: [],
           searchAlbums: [],
           searchArtists: [],
           order: [],
           isShow: false
-        }
-        this.$store.commit('changeSearchInfo', obj)
-        return
+        };
+        this.$store.commit("changeSearchInfo", obj);
+        return;
       }
-      this.searchFlag = true
+      this.searchFlag = true;
       getSearchSug(text).then(res => {
         if (Object.keys(res.data.result).length == 0) {
-          return
+          return;
         }
         // 保存数据
-        var searchSongs = res.data.result.songs
-        var searchAlbums = res.data.result.albums
-        var searchArtists = res.data.result.artists
-        var order = res.data.result.order
+        var searchSongs = res.data.result.songs;
+        var searchAlbums = res.data.result.albums;
+        var searchArtists = res.data.result.artists;
+        var order = res.data.result.order;
         var obj = {
           searchSongs,
           searchAlbums,
           searchArtists,
           order,
           isShow: this.searchFlag
-        }
+        };
 
-        this.$store.commit('changeSearchInfo', obj)
-      })
-    },
-
-
-
-
+        this.$store.commit("changeSearchInfo", obj);
+      });
+    }
   },
   created () {
     if (this.userName) {
@@ -235,7 +246,7 @@ export default {
 }
 .navmenue {
   position: absolute;
-  left: 350px;
+  left: 300px;
   /* width: 100%; */
 }
 .logo-title {
@@ -244,11 +255,11 @@ export default {
 }
 .search {
   position: absolute;
-  left: 900px;
-  z-index: 100000;
+  left: 820px;
+  z-index: 10;
 }
 .search-box {
-  width: 200px;
+  width: 250px;
   height: 45px;
   border-radius: 25px;
   padding-left: 25px;
@@ -256,12 +267,12 @@ export default {
 }
 .userinfo {
   position: absolute;
-  left: 90%;
+  left: 85%;
   color: #fff;
 }
 .user-center {
   position: absolute;
-  left: 1120px;
+  left: 1080px;
 }
 .el-button--primary {
   color: #fff;

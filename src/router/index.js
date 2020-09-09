@@ -18,6 +18,8 @@ import MusicPerson from "@/page/musicPerson/index.vue";
 import mvDetail from "@/page/mymusic/mvDetail.vue";
 import SearchDash from "@/page/searchDash/index.vue"
 import playList from "@/page/playList/index.vue";
+myHome
+import myHome from "@/page/myHome/index.vue";
 
 import homePlay from "@/page/lunboSong/index.vue";
 // 要告诉 vue 使用 vueRouter
@@ -187,6 +189,33 @@ let routes = [{
             hidden: true
         }]
     },
+
+    {
+        path: "myHome",
+        component: home,
+        single: true,
+        name: "我的",
+        meta: {
+            keepAlive: true // 不需要缓存
+        },
+        iconCls: "el-icon-s-home", //图标样式class
+        children: [{
+            path: "/myHome",
+            name: "wode",
+            component: myHome,
+            meta: {
+                keepAlive: true // 不需要缓存
+            },
+            hidden: true
+        }]
+    },
+
+
+
+
+
+
+
 
     // 搜索面板
 

@@ -71,6 +71,7 @@
               </ul>
             </div>
           </div>
+
         </div>
       </div>
     </div>
@@ -95,7 +96,8 @@ export default {
       activeName: "0",
       styleSuggestion: [],
       personData: [],
-      newalbums: []
+      newalbums: [],
+
     };
   },
   created () {
@@ -172,6 +174,13 @@ export default {
 
     handleClick () {
       console.log("a");
+    },
+    handleClose (done) {
+      this.$confirm('确认关闭？')
+        .then(_ => {
+          done();
+        })
+        .catch(_ => { });
     }
   }
 };
@@ -232,6 +241,7 @@ ul {
 .hot-sug {
   width: 100%;
   margin-bottom: 15px;
+  overflow: hidden;
 }
 
 .hot-sug ul {
@@ -239,21 +249,22 @@ ul {
   padding: 0;
   margin: 0;
 }
-.sugImg {
-  display: flex;
-  justify-content: space-around;
-  flex-wrap: wrap;
+.sug {
+  float: left;
+}
+.sugImg li {
+  float: left;
 }
 .sug-sings {
   width: 150px;
   height: 200px;
   /* border: 1px solid #000; */
-  margin-left: 20px;
-
+  width: 15%;
+  margin-left: 18px;
   margin-bottom: 5px;
 }
 .sug-sings img {
-  width: 100%;
+  width: 150px;
   height: 150px;
 }
 .image {

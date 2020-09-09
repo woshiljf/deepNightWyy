@@ -12,3 +12,13 @@ export function getuserplaylist(uid) {
         params: userId
     });
 }
+
+// /user/subcount 获取用户的资料信息
+
+export function getUserInfo() {
+
+    return request({
+        url: "api/user/subcount",
+        method: "get",
+    });
+}
