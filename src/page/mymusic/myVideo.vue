@@ -8,7 +8,7 @@
           </div>
           <hr style="color: red" />
           <div>
-            <div>
+            <div v-loading="tableloading">
               <el-row :gutter="2">
                 <el-col :span="8" v-for="item in collectvedio" :key="item.id">
                   <el-card shadow="always" class="box-card">
@@ -75,6 +75,12 @@ export default {
       type: String,
       default: () => {
         return "";
+      }
+    },
+    tableloading: {
+      type: Boolean,
+      default: () => {
+        return false;
       }
     }
   },

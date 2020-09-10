@@ -3,7 +3,7 @@ const MyTest = {
         nums: 0,
         name: "小狗",
         love: "篮球",
-        playurl: "http://m8.music.126.net/20200830213101/3acc769cba210215a27b792c4dff24b3/ymusic/d260/bf6e/c45c/fe975bd2f2ee1c1de9c60b362121caed.mp3",
+        playurl: "http://m8.music.126.net/20200910211922/f546fc993b4e26ea0cadb3eac43b1fe3/ymusic/a024/09a7/c4c3/fc0d416790bc729172c636e2d2d1109a.mp3",
         playList: [],
         nowPlayId: 0,
         playButtonIndex: 0,

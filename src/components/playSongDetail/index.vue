@@ -1,15 +1,27 @@
 <template>
   <div class="myMusic-container">
-    <div style="height: auto; border-left: 1px solid #eee;border-right: 1px solid #eee" class="container-content">
+    <div
+      style="height: auto; border-left: 1px solid #eee;border-right: 1px solid #eee"
+      class="container-content"
+    >
       <div class="content-left">
         <div style="height: auto">
           <div class="lrc" v-if="geciFlag">
             <div class="lyric">
-              <scroll class="lyric-wrapper" ref="lyricList" :data="geci && geci.lines">
+              <scroll
+                class="lyric-wrapper"
+                ref="lyricList"
+                :data="geci && geci.lines"
+              >
                 <div>
                   <div class="lyric">
-                    <p v-for="(line, index) in geci.lines" ref="lyricLine"
-                      :class="{ current: currentLineNum === index }" class="text" :key="index">
+                    <p
+                      v-for="(line, index) in geci.lines"
+                      ref="lyricLine"
+                      :class="{ current: currentLineNum === index }"
+                      class="text"
+                      :key="index"
+                    >
                       {{ line.txt }}
                     </p>
                   </div>
@@ -22,7 +34,11 @@
             <!-- 专辑头部 -->
             <div class="playListTitle">
               <div class="imagcover">
-                <img :src="playListInfo.coverImgUrl" alt="" style="width: 270px;heigth: 260px" />
+                <img
+                  :src="playListInfo.coverImgUrl"
+                  alt=""
+                  style="width: 270px;heigth: 260px"
+                />
               </div>
               <div class="description">
                 <div class="con play-title">
@@ -30,12 +46,18 @@
                 </div>
 
                 <div class="con creator">
-                  <img :src="creatorInfo.cAvatarUrl" alt="" style="width: 25px;height: 25px; vertical-align: middle;" />
+                  <img
+                    :src="creatorInfo.cAvatarUrl"
+                    alt=""
+                    style="width: 25px;height: 25px; vertical-align: middle;"
+                  />
                   <span>{{ creatorInfo.cNickName }}</span>
-                  <span>{{
+                  <span
+                    >{{
                       playListInfo.createTime
                         | formatDate(playListInfo.createTime)
-                    }}创建</span>
+                    }}创建</span
+                  >
                 </div>
 
                 <div class="con button">
@@ -47,7 +69,12 @@
                 </div>
                 <div class="con tag">
                   <span>标签</span>
-                  <el-button round size="mini" v-for="(item, i) in playListInfo.playListTags" :key="i">{{ item }}
+                  <el-button
+                    round
+                    size="mini"
+                    v-for="(item, i) in playListInfo.playListTags"
+                    :key="i"
+                    >{{ item }}
                   </el-button>
                 </div>
                 <div class=" con dec-content">
@@ -60,25 +87,37 @@
 
             <!-- table -->
             <div class="playListTable">
-              <el-table :data="dataSongs" stripe style="width: 100%" ref="playList" highlight-current-row
+              <el-table
+                :data="dataSongs"
+                stripe
+                style="width: 100%"
+                ref="playList"
+                highlight-current-row
                 :header-cell-style="{
                   background: '#333',
                   color: 'white',
                   padding: '1px 0',
                   height: '50px'
-                }">
+                }"
+              >
                 <el-table-column type="index" width="50" :index="indexMethod">
                 </el-table-column>
                 <el-table-column label="听歌">
                   <template slot-scope="scope">
-                    <el-button size="mini" :type="scope.$index === buttonIndex ? 'goon' : 'default'"
-                      @click="handleEdit(scope.$index, scope.row);" :loading="scope.$index === index">播放
+                    <el-button
+                      size="mini"
+                      :type="scope.$index === buttonIndex ? 'goon' : 'default'"
+                      @click="handleEdit(scope.$index, scope.row);"
+                      :loading="scope.$index === index"
+                      >播放
                     </el-button>
                   </template>
                 </el-table-column>
                 <el-table-column prop="title" label="歌曲标题" width="180">
                   <template slot-scope="scope">
-                    <router-link :to="{ name: 'singInfo', params: { id: scope.row.id } }">
+                    <router-link
+                      :to="{ name: 'singInfo', params: { id: scope.row.id } }"
+                    >
                       <span class="singName">{{ scope.row.title }}</span>
                     </router-link>
                   </template>
@@ -108,13 +147,28 @@
               <el-card class="box-card">
                 <div class="commentText">
                   <div class="img">
-                    <img :src="userImg" alt="" style="width: 50px;height: 50px" />
+                    <img
+                      :src="userImg"
+                      alt=""
+                      style="width: 50px;height: 50px"
+                    />
                   </div>
                   <div class="my-comment">
-                    <el-input type="textarea" :rows="2" placeholder="评论" v-model="textarea" style="width: 100%">
+                    <el-input
+                      type="textarea"
+                      :rows="2"
+                      placeholder="评论"
+                      v-model="textarea"
+                      style="width: 100%"
+                    >
                     </el-input>
                     <div class="commentclick">
-                      <el-button type="primary" size="mini" @click="submitMyComment">评论</el-button>
+                      <el-button
+                        type="primary"
+                        size="mini"
+                        @click="submitMyComment"
+                        >评论</el-button
+                      >
                     </div>
                   </div>
                 </div>
@@ -122,9 +176,17 @@
             </div>
 
             <div class="comment-content" v-loading="comentLoading">
-              <el-card class="box-card" v-for="item in singComment" :key="item.commentId">
+              <el-card
+                class="box-card"
+                v-for="item in singComment"
+                :key="item.commentId"
+              >
                 <div class="img">
-                  <img :src="item.user.avatarUrl" alt="" style="width: 100px;height: 100px" />
+                  <img
+                    :src="item.user.avatarUrl"
+                    alt=""
+                    style="width: 100px;height: 100px"
+                  />
                 </div>
                 <div class="comment">
                   <p>
@@ -135,13 +197,29 @@
                 </div>
 
                 <div class="anwser">
-                  <el-button type="danger" size="mini" @click="anwserHandle(item.commentId);">回复</el-button>
+                  <el-button
+                    type="danger"
+                    size="mini"
+                    @click="anwserHandle(item.commentId);"
+                    >回复</el-button
+                  >
                 </div>
                 <div class="my-comment" v-if="item.commentId == commentIndex">
-                  <el-input type="textarea" :rows="2" placeholder="回复" v-model="textarea2" style="width: 100%">
+                  <el-input
+                    type="textarea"
+                    :rows="2"
+                    placeholder="回复"
+                    v-model="textarea2"
+                    style="width: 100%"
+                  >
                   </el-input>
                   <div class="commentclick">
-                    <el-button type="primary" size="mini" @click="answerMyComment(item.commentId);">评论</el-button>
+                    <el-button
+                      type="primary"
+                      size="mini"
+                      @click="answerMyComment(item.commentId);"
+                      >评论</el-button
+                    >
                   </div>
                 </div>
               </el-card>
@@ -149,9 +227,15 @@
 
             <el-card class="box-card">
               <div class="pagination">
-                <el-pagination background layout="total, sizes, prev, pager, next, jumper" :total="total"
-                  :page-sizes="[10, 20, 30, 40, 50]" @size-change="sizeChange" @next-click="nextClick"
-                  @current-change="currentChange">
+                <el-pagination
+                  background
+                  layout="total, sizes, prev, pager, next, jumper"
+                  :total="total"
+                  :page-sizes="[10, 20, 30, 40, 50]"
+                  @size-change="sizeChange"
+                  @next-click="nextClick"
+                  @current-change="currentChange"
+                >
                 </el-pagination>
               </div>
             </el-card>
@@ -166,10 +250,14 @@
             <ul style="list-style: none;padding:0;margin: 0">
               <li v-for="(item, index) in simiPlayList" :key="index">
                 <div class="img">
-                  <img :src="item.coverImgUrl" alt="" style="width: 50px;height: 50px" />
+                  <img
+                    :src="item.coverImgUrl"
+                    alt=""
+                    style="width: 50px;height: 50px"
+                  />
                 </div>
-                <div class="comment">
-                  <p>{{ item.name }}</p>
+                <div class="playlist-title">
+                  <p @click="playSong(item.id);">{{ item.name }}</p>
 
                   <p>{{ item.creator.nickname }}</p>
                 </div>
@@ -185,10 +273,15 @@
             <ul style="list-style: none;padding:0;margin: 0">
               <li v-for="(item, index) in simiPlaysongs" :key="index">
                 <div class="comment">
-                  <div style="padding: 0;margin: 5px 0px;display:flex;justify-content: space-between;">
+                  <div
+                    style="padding: 0;margin: 5px 0px;display:flex;justify-content: space-between;"
+                  >
                     <span> {{ item.name }}</span>
-                    <span @click="playSong(item.id);" :loading="item.id === loadIndex"><i
-                        class="el-icon-caret-right"></i></span>
+                    <span
+                      @click="playSong(item.id);"
+                      :loading="item.id === loadIndex"
+                      ><i class="el-icon-caret-right"></i
+                    ></span>
                   </div>
                   <p style="padding: 0;margin: 0;color: #666">
                     {{ item.artists[0].name }}
@@ -221,7 +314,7 @@ export default {
   components: {
     Scroll
   },
-  data () {
+  data() {
     return {
       geci: "",
       total: 0,
@@ -276,7 +369,7 @@ export default {
 
   watch: {
     // 监听路由变化
-    $route: function (to, from) {
+    $route: function(to, from) {
       // this.getComment()
       // this.getLrc()
     }
@@ -290,7 +383,7 @@ export default {
   },
 
   filters: {
-    formatDate: function (time) {
+    formatDate: function(time) {
       var now = new Date(time);
       var year = now.getFullYear(); //取得4位数的年份
       var month = now.getMonth() + 1; //取得日期中的月份，其中0表示1月，11表示12月
@@ -312,7 +405,7 @@ export default {
         second
       );
     },
-    formMin: function (time) {
+    formMin: function(time) {
       var t = new Date(time);
       var m = t.getMinutes();
       var s = t.getSeconds();
@@ -321,16 +414,16 @@ export default {
       return m + ":" + s;
     }
   },
-  mounted () {
+  mounted() {
     this.getSwitchInfo();
   },
   methods: {
-    getSwitchInfo () {
+    getSwitchInfo() {
       var targetType = this.targetInfo.targetType;
       switch (targetType) {
         case 1:
           this.getLrc();
-          this.playSing()
+          this.playSing();
           this.getComment();
           this.getsimiInfo();
           break;
@@ -349,14 +442,14 @@ export default {
           break;
       }
     },
-    getRelatedList () {
+    getRelatedList() {
       var params = this.targetId;
       Promise.all([getRelatedPlayList(params)]).then(res => {
         this.simiPlayList = res[0].data.playlists;
       });
     },
 
-    getsimiInfo () {
+    getsimiInfo() {
       var params = {
         id: this.targetId
       };
@@ -367,9 +460,52 @@ export default {
         }
       );
     },
+    // 播放歌曲
+    playSong(songid) {
+      this.$store.commit("changePlayListId", songid);
+      this.id = songid;
+      this.getComment();
+      this.getPlaylist();
+      this.getRelatedList();
+    },
+
+    getPlaylist() {
+      var params = {
+        id: this.playListId
+      };
+      get("api/playlist/detail", params)
+        .then(response => {
+          console.log("歌单", response);
+
+          this.handlePlayListInfo1(response.data.playlist);
+        })
+        .catch(e => {
+          console.log(e);
+        })
+        .finally(e => {});
+    },
+
+    handlePlayListInfo1(songList) {
+      var dataSongs = songList.tracks;
+      var songsLength = dataSongs.length;
+      // this.creatorInfo = {
+      //   cNickName: songList.playlist.creator.nickname || 0,
+      //   cAvatarUrl: songList.playlist.creator.avatarUrl || 0
+      // };
+      this.playListInfo = {
+        trackCount: songsLength, //歌单曲目数量
+        playCount: songList.playCount, // 播放次数
+        createTime: songList.createTime, // 创建时间
+        playListTags: songList.tags || 0, // 歌单标签
+        description: songList.description, // 歌单描述
+        coverImgUrl: songList.coverImgUrl, //歌单图片
+        nameTitle: songList.name // 歌单名字标题
+      };
+      this.show(dataSongs);
+    },
 
     // 歌词相关方法start
-    getLrc () {
+    getLrc() {
       this.geciFlag = true;
       this.albumFlag = false;
       var params = {
@@ -386,10 +522,10 @@ export default {
         .catch(e => {
           console.log(e);
         })
-        .finally(e => { });
+        .finally(e => {});
     },
     // 歌曲播放相关
-    playSing () {
+    playSing() {
       var params = {
         id: this.targetId
       };
@@ -412,13 +548,13 @@ export default {
         .catch(e => {
           console.log(e);
         })
-        .finally(e => { });
+        .finally(e => {});
       // 获取相似歌曲的歌单链表
       // this.getsimiList();
     },
 
     // 歌词滚动还没有实现
-    handleLyric ({ lineNum, txt }) {
+    handleLyric({ lineNum, txt }) {
       this.currentLineNum = lineNum;
       // 若当前行大于5,开始滚动,以保歌词显示于中间位置
       if (lineNum > 5) {
@@ -431,7 +567,7 @@ export default {
     },
     //歌词相关方法end
     // 获取歌曲、歌单评论start
-    getComment () {
+    getComment() {
       var params = {
         id: this.targetId,
         limit: this.pageSize,
@@ -447,7 +583,7 @@ export default {
       });
     },
 
-    getCommentA () {
+    getCommentA() {
       var params = {
         id: this.targetId,
         limit: this.pageSize,
@@ -466,7 +602,7 @@ export default {
     // 获取歌词，歌单评论end
 
     // 评论相关方法start
-    commentHandle (params) {
+    commentHandle(params) {
       if (params.content == "") {
         this.$message({
           type: "warning",
@@ -499,10 +635,10 @@ export default {
           this.commentIndex = 0;
         });
     },
-    anwserHandle (commentId) {
+    anwserHandle(commentId) {
       this.commentIndex = commentId;
     },
-    submitMyComment () {
+    submitMyComment() {
       var params = {
         id: this.targetId,
         content: this.textarea
@@ -510,7 +646,7 @@ export default {
 
       this.commentHandle(params);
     },
-    answerMyComment (commentId) {
+    answerMyComment(commentId) {
       var params = {
         t: 2,
         id: this.targetId,
@@ -522,17 +658,17 @@ export default {
     // 评论相关方法end
     // pagination方法start
 
-    sizeChange (data) {
+    sizeChange(data) {
       this.pageSize = data;
       this.getComment();
     },
-    nextClick (p) {
+    nextClick(p) {
       this.offset = p;
       // 下一页
       this.flag = false;
       this.getComment();
     },
-    currentChange (p) {
+    currentChange(p) {
       if (this.flag) {
         this.offset = p;
         this.getComment();
@@ -541,7 +677,7 @@ export default {
     },
     // 获取专辑相关得方法
     // 专辑。歌单数据处理方法
-    getAlubmShow () {
+    getAlubmShow() {
       this.geciFlag = false;
       this.albumFlag = true;
       var params = {
@@ -554,9 +690,9 @@ export default {
         .catch(e => {
           console.log(e);
         })
-        .finally(e => { });
+        .finally(e => {});
     },
-    handlePlayListInfo (songList) {
+    handlePlayListInfo(songList) {
       var dataSongs = songList.songs;
       var songsLength = dataSongs.length;
       // this.creatorInfo = {
@@ -574,7 +710,7 @@ export default {
       };
       this.show(dataSongs);
     },
-    show (data) {
+    show(data) {
       var dataList = [];
       for (let i = 0; i < data.length; i++) {
         var obj = {};
@@ -588,15 +724,15 @@ export default {
 
       this.dataSongs = dataList;
     },
-    playHandle () {
+    playHandle() {
       this.$store.commit("SET_PLAYSTATS", true);
     },
-    indexMethod (index) {
+    indexMethod(index) {
       return index * 1 + 1;
     },
 
     // 播放歌单的操作（这是歌单的播放）
-    handleEdit (index, row) {
+    handleEdit(index, row) {
       this.songid = row.id;
       this.index = index;
       var params = {
@@ -624,7 +760,7 @@ export default {
         .catch(e => {
           console.log(e);
         })
-        .finally(e => { });
+        .finally(e => {});
 
       if (this.flag) {
         var temp = [];
@@ -640,7 +776,7 @@ export default {
 
   // 组件导航钩子
 
-  beforeRouteEnter (to, from, next) {
+  beforeRouteEnter(to, from, next) {
     next();
   }
 };
@@ -651,6 +787,7 @@ export default {
   padding: 0 200px;
   height: auto;
   justify-content: space-between;
+  padding-bottom: 80px;
 }
 .coverImgurl {
   width: 50px;
@@ -743,5 +880,11 @@ export default {
   background: red;
   border-color: #48d1cc;
   color: #fff;
+}
+.playlist-title {
+  cursor: pointer;
+}
+.playlist-title :hover {
+  text-decoration: underline;
 }
 </style>

@@ -25,7 +25,7 @@
         </div>
       </div>
       <div>
-        <div class="songsList" v-loading="tableloading">
+        <div class="songsList">
           <div><span>歌曲列表</span> <span>播放次数</span></div>
           <div class="hr"></div>
           <div>
@@ -34,6 +34,7 @@
               stripe
               style="width: 100%"
               ref="playList"
+              v-loading="tableloading"
               highlight-current-row
               :header-cell-style="{
                 background: '#333',
@@ -218,6 +219,7 @@ export default {
 .songs-container {
   width: 100%;
   height: 100%;
+  padding-bottom: 80px;
 }
 .songs-title {
   display: flex;

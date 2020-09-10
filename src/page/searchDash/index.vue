@@ -1,77 +1,102 @@
 <template>
   <div class="myMusic-container">
-    <div style="height: auto; border-right: 1px solid #eee;border-left: 1px solid #eee;" class="container-content">
+    <div
+      style="height: auto; border-right: 1px solid #eee;border-left: 1px solid #eee;"
+      class="container-content"
+    >
       <div class="content-left">
         <div style="height: auto">
           <div style="margin: 10px 0" class="search-header">
             <div style="margin-top: 15px;">
-
-              <el-input placeholder="请输入内容" v-model="searchContent" class=" input-with-select" style="width: 520px;"
-                @keyup.enter.native="searchOutHanle()">
-                <el-button slot="append" icon="el-icon-search" @click="searchOutHanle()"></el-button>
+              <el-input
+                placeholder="请输入内容"
+                v-model="searchContent"
+                class=" input-with-select"
+                style="width: 520px;"
+                @keyup.enter.native="searchOutHanle();"
+              >
+                <el-button
+                  slot="append"
+                  icon="el-icon-search"
+                  @click="searchOutHanle();"
+                ></el-button>
               </el-input>
 
-              <div style="min-height: 200px;border: 1px solid #ccc" class="outcome" v-show="searchFlag">
-
+              <div
+                style="min-height: 200px;border: 1px solid #ccc"
+                class="outcome"
+                v-show="searchFlag"
+              >
                 <div class="come sing">
-
-                  <div class="left" style="width: 83px; border-right: 1px solid #ccc">
+                  <div
+                    class="left"
+                    style="width: 83px; border-right: 1px solid #ccc"
+                  >
                     <span>单曲</span>
                   </div>
                   <div class="right">
-                    <li v-for=" item in searchSongs" :key="item.id" class="singOne"
-                      style="list-style: none;padding: 5px 10px">
-
-                      <span style="color: red" @click="gotoPlay(item.id)">{{item.name}}</span>-
+                    <li
+                      v-for="item in searchSongs"
+                      :key="item.id"
+                      class="singOne"
+                      style="list-style: none;padding: 5px 10px"
+                    >
+                      <span style="color: red" @click="gotoPlay(item.id);">{{
+                        item.name
+                      }}</span
+                      >-
                       <span v-for="s in item.artists" :key="s.id">
-                        {{s.name}}
+                        {{ s.name }}
                       </span>
-
                     </li>
                   </div>
                 </div>
 
-                <!--  -->
+                <!---->
                 <div class="come singer">
-
-                  <div class="left" style="width: 83px; border-right: 1px solid #ccc">
+                  <div
+                    class="left"
+                    style="width: 83px; border-right: 1px solid #ccc"
+                  >
                     <span>歌手</span>
                   </div>
                   <div class="right">
-                    <p v-for=" item in searchArtists" :key="item.id">
-
-                      <span style="color: red">{{item.name}}</span>
-
+                    <p v-for="item in searchArtists" :key="item.id">
+                      <span style="color: red">{{ item.name }}</span>
                     </p>
                   </div>
                 </div>
                 <div class=" come album">
-
-                  <div class="left" style="width: 83px; border-right: 1px solid #ccc">
+                  <div
+                    class="left"
+                    style="width: 83px; border-right: 1px solid #ccc"
+                  >
                     <span>专辑</span>
                   </div>
                   <div class="right">
-                    <p v-for=" item in searchAlbums" :key="item.id">
-
-                      <span style="color: red">{{item.name}}</span>-
-                      <span style="color: red">{{item.artist.name}}</span>
-
+                    <p v-for="item in searchAlbums" :key="item.id">
+                      <span style="color: red">{{ item.name }}</span
+                      >- <span style="color: red">{{ item.artist.name }}</span>
                     </p>
                   </div>
                 </div>
-
               </div>
-
             </div>
           </div>
           <div class="searchKey">
-            <h3 style="color: #fff">搜索<span style="color: red">{{searchEnterData}}</span>,找到{{searchOut.songCount}}的单曲
+            <h3 style="color: #fff">
+              搜索<span style="color: red">{{ searchEnterData }}</span
+              >,找到{{ searchOut.songCount }}的单曲
             </h3>
           </div>
           <div class="hr"></div>
         </div>
         <div class="optionsBar">
-          <el-tabs type="border-card" @tab-click="optionsPan" v-model="activePan">
+          <el-tabs
+            type="border-card"
+            @tab-click="optionsPan"
+            v-model="activePan"
+          >
             <el-tab-pane label="单曲" name="1">
               <sing-box ref="singBox" :search-out="searchOut"></sing-box>
             </el-tab-pane>
@@ -89,9 +114,15 @@
           <div class="commentBox">
             <el-card class="box-card">
               <div class="pagination">
-                <el-pagination background layout="total, sizes, prev, pager, next, jumper" :total="total"
-                  :page-sizes="[10, 20, 30, 40, 50]" @size-change="sizeChange" @next-click="nextClick"
-                  @current-change="currentChange">
+                <el-pagination
+                  background
+                  layout="total, sizes, prev, pager, next, jumper"
+                  :total="total"
+                  :page-sizes="[10, 20, 30, 40, 50]"
+                  @size-change="sizeChange"
+                  @next-click="nextClick"
+                  @current-change="currentChange"
+                >
                 </el-pagination>
               </div>
             </el-card>
@@ -106,9 +137,9 @@
 import { get } from "@/utils/request";
 import { getEvent, getUserComment } from "@/api/getFrendEvent";
 import { getPlayListDetail, getRelatedPlayList } from "@/api/getSongsSheet";
-import { getSearchSug, getCloundSearch } from '@/api/searchApi'
+import { getSearchSug, getCloundSearch } from "@/api/searchApi";
 import { mapState } from "vuex";
-import SingBox from './singBox'
+import SingBox from "./singBox";
 export default {
   name: "singInfo",
 
@@ -116,7 +147,7 @@ export default {
     SingBox
   },
 
-  data () {
+  data() {
     return {
       index: "",
       flag: true,
@@ -124,16 +155,15 @@ export default {
 
       total: 10,
       // 搜索文本；
-      searchContent: '',
+      searchContent: "",
       searchSongs: [],
       searchAlbums: [],
       searchArtists: [],
       order: [],
       searchFlag: false,
-      activePan: '1',
-      searchEnterData: '',
+      activePan: "1",
+      searchEnterData: "",
       firstMount: false
-
     };
   },
   computed: {
@@ -145,7 +175,7 @@ export default {
     })
   },
   filters: {
-    formatDate: function (time) {
+    formatDate: function(time) {
       var now = new Date(time);
       var year = now.getFullYear(); //取得4位数的年份
       var month = now.getMonth() + 1; //取得日期中的月份，其中0表示1月，11表示12月
@@ -167,7 +197,7 @@ export default {
         second
       );
     },
-    formMin: function (time) {
+    formMin: function(time) {
       var t = new Date(time);
       var m = t.getMinutes();
       var s = t.getSeconds();
@@ -176,117 +206,109 @@ export default {
       return m + ":" + s;
     }
   },
-  mounted () {
-    this.total = this.searchOut.songCount
+  mounted() {
+    this.total = this.searchOut.songCount;
     this.songsId = this.playListId;
-    this.searchEnterData = this.searchOut.keywords
-    this.searchContent = this.searchOut.keywords
+    this.searchEnterData = this.searchOut.keywords;
+    this.searchContent = this.searchOut.keywords;
   },
 
   watch: {
-    datalist: function () {
+    datalist: function() {
       this.index = "";
       this.flag = true;
     },
-    $route: function (to, from) {
+    $route: function(to, from) {
       console.log("路由变化了");
     },
-    searchContent: function (newText, oldText) {
-      this.getSearchContent(newText)
+    searchContent: function(newText, oldText) {
+      this.getSearchContent(newText);
     }
   },
 
   methods: {
-
-    sizeChange (page) {
+    sizeChange(page) {
       // console.log('data是什么', data)
       this.searchOutHanle(page);
     },
-    nextClick (page) {
-      this.searchOutHanle(page)
+    nextClick(page) {
+      this.searchOutHanle(page);
     },
-    currentChange (p) {
+    currentChange(p) {
       if (this.flag) {
         this.searchOutHanle(p);
       }
       this.flag = true;
     },
-    playSong () { },
-    submitMyComment () { },
+    playSong() {},
+    submitMyComment() {},
     // 搜索结果处理
-    searchOutHanle (offset = 30) {
-      if (this.searchContent == '') {
-        return
+    searchOutHanle(offset = 30) {
+      if (this.searchContent == "") {
+        return;
       }
       // 搜索参数处理，默认搜索为单曲
-      this.searchEnterData = this.searchContent
-      this.firstMount = true
+      this.searchEnterData = this.searchContent;
+      this.firstMount = true;
 
       const p = {
         keywords: this.searchContent,
         offset: offset
-      }
-      console.log('参数呢', p)
+      };
+      console.log("参数呢", p);
 
-      getCloundSearch(p).then(res => {
-        this.$store.commit('changeSearchOutCome', res.data.result)
-        console.log('数据', res.data)
-        this.total = res.data.result.songCount
-        this.searchFlag = false
-      }).catch(err => {
-        console.log(err)
-        this.searchFlag = false
-
-      }).finally(e => {
-        this.searchFlag = false
-
-      })
-
+      getCloundSearch(p)
+        .then(res => {
+          this.$store.commit("changeSearchOutCome", res.data.result);
+          console.log("数据", res.data);
+          this.total = res.data.result.songCount;
+          this.searchFlag = false;
+        })
+        .catch(err => {
+          console.log(err);
+          this.searchFlag = false;
+        })
+        .finally(e => {
+          this.searchFlag = false;
+        });
     },
-
-
 
     // 搜索方法start
-    getSearchContent (text) {
-      if (text == '') {
-        this.searchFlag = false
-        return
+    getSearchContent(text) {
+      if (text == "") {
+        this.searchFlag = false;
+        return;
       }
-      this.searchFlag = true
+      this.searchFlag = true;
       getSearchSug(text).then(res => {
         if (Object.keys(res.data.result).length == 0) {
-          this.searchFlag = false
-          return
+          this.searchFlag = false;
+          return;
         }
         // 保存数据
-        console.log('搜索数据', res.data)
-        this.searchSongs = res.data.result.songs
-        this.searchAlbums = res.data.result.albums
-        this.searchArtists = res.data.result.artists
-        this.order = res.data.result.order
-      })
+        console.log("搜索数据", res.data);
+        this.searchSongs = res.data.result.songs;
+        this.searchAlbums = res.data.result.albums;
+        this.searchArtists = res.data.result.artists;
+        this.order = res.data.result.order;
+      });
     },
 
-    gotoPlay (singId) {
-
+    gotoPlay(singId) {
       // console.log(this.$refs)
       // 调用子组件，去听歌
-      this.$refs.singBox.gotoPlaySing(singId)
-
+      this.$refs.singBox.gotoPlaySing(singId);
     },
-
-
 
     // 搜索部分
-    optionsPan (tab, event) {
+    optionsPan(tab, event) {
       console.log(tab);
-      getCloundSearch(params)
-    },
-
+      getCloundSearch(params);
+    }
   },
 
   // 组件导航钩子
-  beforeRouteEnter (to, from, next) {
+  beforeRouteEnter(to, from, next) {
     next(vm => {
       var preplayListId = vm.$store.state.myTest.prePlayListId;
       var curPlayListId = vm.$store.state.myTest.playListId;
@@ -296,7 +318,7 @@ export default {
       }
     });
   },
-  beforeRouteLeave (to, from, next) {
+  beforeRouteLeave(to, from, next) {
     this.$store.commit("changePrePlayListId", this.songsId);
     next();
   }
@@ -310,6 +332,7 @@ export default {
   justify-content: space-between;
   min-width: 1420px;
   color: #1e131d;
+  padding-bottom: 80px;
 }
 .coverImgurl {
   width: 50px;

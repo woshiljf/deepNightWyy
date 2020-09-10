@@ -2,97 +2,101 @@
   <div class="songs-container">
     <div>
       <div>
-
         <div class="songsList">
           <div>
-            <h1>我的歌手（{{singersSize}}）</h1>
+            <h1>我的歌手（{{ singersSize }}）</h1>
           </div>
           <hr style="color: red" />
-          <div>
-            <el-card class="box-card" v-for="item in collectsingers" :key="item.id">
-              <img :src="item.picUrl" alt="" style="width: 120px;height: 120px">
+          <div v-loading="tableloading">
+            <el-card
+              class="box-card"
+              v-for="item in collectsingers"
+              :key="item.id"
+            >
+              <img
+                :src="item.picUrl"
+                alt=""
+                style="width: 120px;height: 120px"
+              />
               <div style="display:inline-block;text-align:center">
-                <p>{{item.name}}</p>
-                <p>{{item.albumSize}}个专辑</p>
+                <p>{{ item.name }}</p>
+                <p>{{ item.albumSize }}个专辑</p>
               </div>
             </el-card>
           </div>
-
         </div>
-
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { nowListenMusic } from '../../api/listenSing'
+import { nowListenMusic } from "../../api/listenSing";
 export default {
-
-  data () {
+  data() {
     return {
-      singInformation: '',
-      index: '',
+      singInformation: "",
+      index: "",
       singersSize: collectsingers.length
-    }
+    };
   },
   props: {
     collectsingers: {
       type: Array,
-      default: function () {
-        return []
+      default: function() {
+        return [];
       }
     },
     id: {
       type: Number,
-      default: function () {
-        return 0
+      default: function() {
+        return 0;
       }
     },
     imgUrl: {
       type: String,
       default: () => {
-        return ''
+        return "";
       }
     },
     songsDescription: {
       type: String,
       default: () => {
-        return ''
+        return "";
       }
     },
     songsTitle: {
       type: String,
       default: () => {
-        return ''
+        return "";
+      }
+    },
+    tableloading: {
+      type: Boolean,
+      default: () => {
+        return false;
       }
     }
   },
   methods: {
-    indexMethod (index) {
+    indexMethod(index) {
       return index * 1;
     },
-    handleEdit (index, row) {
+    handleEdit(index, row) {
+      this.index = index;
+      nowListenMusic(row.id)
+        .then(response => {
+          this.index = "";
 
-      this.index = index
-      nowListenMusic(row.id).then(response => {
-
-        this.index = ''
-
-        console.log('大海沟', response);
-
-
-      }).catch(e => {
-
-        console.log(e);
-      })
+          console.log("大海沟", response);
+        })
+        .catch(e => {
+          console.log(e);
+        });
     }
   },
-  mounted () {
-
-  }
-
-}
+  mounted() {}
+};
 </script>
 
 <style scoped>

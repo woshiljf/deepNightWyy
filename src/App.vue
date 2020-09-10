@@ -1,5 +1,10 @@
 <template>
-  <div id="app" @mousemove="moveEvent" @click="moveEvent" @mouseenter="browerPlayEnter">
+  <div
+    id="app"
+    @mousemove="moveEvent"
+    @click="moveEvent"
+    @mouseenter="browerPlayEnter"
+  >
     <router-view></router-view>
   </div>
 </template>
@@ -9,20 +14,18 @@ import { mapGetters, mapState } from "vuex";
 
 export default {
   name: "App",
-  data () {
+  data() {
     return {
       isRouterAlive: true,
       timmer: null,
-      timeId: null,
-
+      timeId: null
     };
   },
-  created () {
+  created() {
     this.moveEvent();
-
   },
-  mounted () {
-    console.log(this.mesg, '大海');
+  mounted() {
+    console.log(this.mesg, "大海");
   },
 
   computed: {
@@ -31,15 +34,14 @@ export default {
     })
   },
 
-
   methods: {
-    reload () {
+    reload() {
       this.isRouterAlive = false;
-      this.$nextTick(function () {
+      this.$nextTick(function() {
         this.isRouterAlive = true;
       });
     },
-    moveEvent () {
+    moveEvent() {
       // 只要鼠标在页面活动，清除计时器，重新计时
       const path = ["/login"];
       if (document.URL.indexOf(path) === -1) {
@@ -48,7 +50,7 @@ export default {
         this.init();
       }
     },
-    init () {
+    init() {
       this.timmer = setTimeout(() => {
         // 清除session
         sessionStorage.removeItem("sessionData");
@@ -61,36 +63,36 @@ export default {
             title: "错误",
             message: "登录超时,请重新登录",
             type: "error",
-            duration: 2000,
+            duration: 2000
           });
           location.reload();
         });
       }, 1000 * 60 * 30); // 设置半小时返回登录页
     },
-    handleClose (done) {
+    handleClose(done) {
       this.$confirm("确认关闭？")
-        .then((_) => {
+        .then(_ => {
           this.$store.commit("SET_PLAYSTATS", false);
 
           done();
         })
-        .catch((_) => { });
+        .catch(_ => {});
     },
-    playMove () {
+    playMove() {
       clearTimeout(this.timeId);
       this.$store.commit("SET_PLAYSTATS", true);
       this.startTime();
     },
-    startTime () {
+    startTime() {
       this.timeId = setTimeout(() => {
         this.$store.commit("SET_PLAYSTATS", false);
       }, 1000);
     },
 
-    browerPlayEnter () {
+    browerPlayEnter() {
       this.$store.commit("SET_PLAYSTATS", true);
-    },
-  },
+    }
+  }
 };
 </script>
 <style lang="scss">
@@ -124,6 +126,7 @@ body {
   top: 0;
   bottom: 0;
   width: 100%;
+  padding-bottom: 80px;
 }
 .el-drawer__body {
   background-color: #333;
