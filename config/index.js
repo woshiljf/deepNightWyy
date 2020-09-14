@@ -11,7 +11,7 @@ module.exports = {
         assetsPublicPath: "/",
         proxyTable: {
             "/api": {
-                target: "http://i33628o656.eicp.vip/",
+                target: "http://localhost:3001",
                 // target: "http://123.207.32.32:9001", // 张某某
                 // target: 'http://10.65.1.105:8087',  // 某某某
                 // target: 'http://v.juhe.cn/toutiao/index', // 测试端口

@@ -173,7 +173,7 @@ export default {
   },
   computed: {
     ...mapState({
-      userImg: state => state.user.userAvatarUrl
+      // userImg: state => state.user.userAvatarUrl
     })
   },
   filters: {
@@ -201,6 +201,7 @@ export default {
     }
   },
   mounted () {
+    this.userImg = JSON.parse(sessionStorage.getItem("userImage")).userImage
     this.getComment();
     this.getLrc();
     this.getsimiInfo();

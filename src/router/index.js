@@ -16,10 +16,11 @@ import playSing from "@/page/mymusic/playForm.vue";
 import ShopCity from "@/page/shopCity/index.vue";
 import MusicPerson from "@/page/musicPerson/index.vue";
 import mvDetail from "@/page/mymusic/mvDetail.vue";
-import SearchDash from "@/page/searchDash/index.vue"
+import SearchDash from "@/page/searchDash/index.vue";
 import playList from "@/page/playList/index.vue";
-myHome
 import myHome from "@/page/myHome/index.vue";
+
+import loginDash from "@/page/loginDash/index.vue";
 
 import homePlay from "@/page/lunboSong/index.vue";
 // 要告诉 vue 使用 vueRouter
@@ -68,7 +69,10 @@ let routes = [{
             path: "/dashboard",
             name: "网易云首页2",
             component: () =>
-                import ( /*webpackChunkName:'importDashboard',webpackPrefetch: true*/ "@/page/dashboard/index.vue"),
+                import (
+                    /*webpackChunkName:'importDashboard',webpackPrefetch: true*/
+                    "@/page/dashboard/index.vue"
+                ),
             meta: {
                 keepAlive: true // 不需要缓存
             }
@@ -191,6 +195,26 @@ let routes = [{
     },
 
     {
+        path: "myLoginDash",
+        component: home,
+        single: true,
+        name: "登录面板",
+        meta: {
+            keepAlive: true // 不需要缓存
+        },
+        iconCls: "el-icon-s-home", //图标样式class
+        children: [{
+            path: "/gotoLogin",
+            name: "myLoginDash1",
+            component: loginDash,
+            meta: {
+                keepAlive: true // 不需要缓存
+            },
+            hidden: true
+        }]
+    },
+
+    {
         path: "myHome",
         component: home,
         single: true,
@@ -209,13 +233,6 @@ let routes = [{
             hidden: true
         }]
     },
-
-
-
-
-
-
-
 
     // 搜索面板
 
@@ -238,11 +255,6 @@ let routes = [{
             hidden: true
         }]
     },
-
-
-
-
-
 
     {
         path: "shopCity",

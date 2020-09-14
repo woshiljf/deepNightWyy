@@ -175,7 +175,6 @@ export default {
   },
   computed: {
     ...mapState({
-      userImg: state => state.user.userAvatarUrl,
       buttonIndex: state => state.myTest.playButtonIndex,
       playListId: state => state.myTest.playListId
     })
@@ -217,6 +216,7 @@ export default {
   },
   mounted () {
     this.songsId = this.playListId;
+    this.userImg = JSON.parse(sessionStorage.getItem("userImage")).userImage
     // this.getComment();
     // this.getPlaylist();
     // this.getRelatedList();

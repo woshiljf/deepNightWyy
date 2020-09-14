@@ -80,10 +80,14 @@ const user = {
                             var loginName = response.data.profile.nickname;
                             var userId = response.data.account.id;
                             console.log("dh", response);
-
+                            var userImage = response.data.profile.avatarUrl;
                             sessionStorage.setItem("user", JSON.stringify({ loginName }));
 
                             sessionStorage.setItem("userId", JSON.stringify({ userId }));
+                            sessionStorage.setItem(
+                                "userImage",
+                                JSON.stringify({ userImage })
+                            );
 
                             commit("SET_USERAvatarUrl", response.data.profile.avatarUrl);
                             commit("SET_USERID", response.data.profile.userId);

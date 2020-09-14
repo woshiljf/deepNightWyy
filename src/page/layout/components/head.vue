@@ -71,14 +71,15 @@ export default {
       searchSongs: [],
       searchAlbums: [],
       searchArtists: [],
-      order: []
+      order: [],
+      isStranger: true,
+      userImg: ''
     };
   },
   computed: {
-    ...mapState({
-      userImg: state => state.user.userAvatarUrl,
-      isStranger: state => state.myTest.stronger
-    })
+    // ...mapState({
+    //   userImg: state => state.user.userAvatarUrl,
+    // })
   },
   watch: {
     searchKewords: function (newText, oldText) {
@@ -87,7 +88,11 @@ export default {
   },
 
   mounted () {
+
     var user = sessionStorage.getItem("user");
+    var isStranger = sessionStorage.getItem("stranger")
+    this.isStranger = JSON.parse(isStranger).iSstranger
+    this.userImg = JSON.parse(sessionStorage.getItem("userImage")).userImage
     if (user) {
       user = JSON.parse(user);
       this.sysUserName = user.loginName || "";
@@ -110,26 +115,36 @@ export default {
         .catch(() => { });
     },
     myMusicHandle () {
-      this.$router.push({ path: "/mymusic" });
+
+      var isStranger = sessionStorage.getItem("stranger")
+      this.isStranger = JSON.parse(isStranger).iSstranger
+
       if (this.isStranger == true) {
         this.$message({
           message: "你没有登录少年",
           type: "warning",
           duration: 2 * 1000
         });
+        this.$router.push({ path: "/gotoLogin" });
+      } else {
+        this.$router.push({ path: "/mymusic" });
       }
     },
     findMusic () {
       this.$router.push({ path: "/" });
     },
     frendsHandle () {
-      this.$router.push({ path: "/myfrends" });
+      var isStranger = sessionStorage.getItem("stranger")
+      this.isStranger = JSON.parse(isStranger).iSstranger
       if (this.isStranger == true) {
         this.$message({
-          message: "你没有登录少年",
+          message: "你没有登录少年,先去登录一下",
           type: "warning",
           duration: 2 * 1000
         });
+        this.$router.push({ path: "/gotoLogin" });
+      } else {
+        this.$router.push({ path: "/myfrends" });
       }
     },
     shopHandle () {

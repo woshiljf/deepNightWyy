@@ -1,5 +1,7 @@
 <template>
-  <div><home-play :target-id="id" :target-info="targetInfo"> </home-play></div>
+  <div>
+    <home-play :target-id="id" :target-info="targetInfo"> </home-play>
+  </div>
 </template>
 
 <script>
@@ -17,7 +19,7 @@ export default {
   components: {
     HomePlay
   },
-  data() {
+  data () {
     return {
       id: this.$route.query.targetId,
       singComment: "",
@@ -28,18 +30,18 @@ export default {
   },
   computed: {
     ...mapState({
-      userImg: state => state.user.userAvatarUrl,
       buttonIndex: state => state.myTest.playButtonIndex,
       playListId: state => state.myTest.playListId
     })
   },
-  mounted() {
+  mounted () {
     this.getPlayInfo();
+    this.userImg = JSON.parse(sessionStorage.getItem("userImage")).userImage
   },
   methods: {
-    getPlayInfo() {},
+    getPlayInfo () { },
 
-    getsimiInfo() {
+    getsimiInfo () {
       var params = {
         id: this.$route.params.id
       };
@@ -52,7 +54,7 @@ export default {
       );
     },
     // 组件导航钩子
-    beforeRouteEnter(to, from, next) {
+    beforeRouteEnter (to, from, next) {
       next(vm => {
         var preplayListId = vm.$store.state.myTest.prePlayListId;
         var curPlayListId = vm.$store.state.myTest.playListId;
@@ -62,7 +64,7 @@ export default {
         }
       });
     },
-    beforeRouteLeave(to, from, next) {
+    beforeRouteLeave (to, from, next) {
       this.$store.commit("changePrePlayListId", this.songsId);
       next();
     }

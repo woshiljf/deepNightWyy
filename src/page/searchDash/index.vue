@@ -1,50 +1,26 @@
 <template>
   <div class="myMusic-container">
-    <div
-      style="height: auto; border-right: 1px solid #eee;border-left: 1px solid #eee;"
-      class="container-content"
-    >
+    <div style="height: auto; border-right: 1px solid #eee;border-left: 1px solid #eee;" class="container-content">
       <div class="content-left">
         <div style="height: auto">
           <div style="margin: 10px 0" class="search-header">
             <div style="margin-top: 15px;">
-              <el-input
-                placeholder="请输入内容"
-                v-model="searchContent"
-                class=" input-with-select"
-                style="width: 520px;"
-                @keyup.enter.native="searchOutHanle();"
-              >
-                <el-button
-                  slot="append"
-                  icon="el-icon-search"
-                  @click="searchOutHanle();"
-                ></el-button>
+              <el-input placeholder="请输入内容" v-model="searchContent" class=" input-with-select" style="width: 520px;"
+                @keyup.enter.native="searchOutHanle();">
+                <el-button slot="append" icon="el-icon-search" @click="searchOutHanle();"></el-button>
               </el-input>
 
-              <div
-                style="min-height: 200px;border: 1px solid #ccc"
-                class="outcome"
-                v-show="searchFlag"
-              >
+              <div style="min-height: 200px;border: 1px solid #ccc" class="outcome" v-show="searchFlag">
                 <div class="come sing">
-                  <div
-                    class="left"
-                    style="width: 83px; border-right: 1px solid #ccc"
-                  >
+                  <div class="left" style="width: 83px; border-right: 1px solid #ccc">
                     <span>单曲</span>
                   </div>
                   <div class="right">
-                    <li
-                      v-for="item in searchSongs"
-                      :key="item.id"
-                      class="singOne"
-                      style="list-style: none;padding: 5px 10px"
-                    >
+                    <li v-for="item in searchSongs" :key="item.id" class="singOne"
+                      style="list-style: none;padding: 5px 10px">
                       <span style="color: red" @click="gotoPlay(item.id);">{{
                         item.name
-                      }}</span
-                      >-
+                      }}</span>-
                       <span v-for="s in item.artists" :key="s.id">
                         {{ s.name }}
                       </span>
@@ -54,10 +30,7 @@
 
                 <!---->
                 <div class="come singer">
-                  <div
-                    class="left"
-                    style="width: 83px; border-right: 1px solid #ccc"
-                  >
+                  <div class="left" style="width: 83px; border-right: 1px solid #ccc">
                     <span>歌手</span>
                   </div>
                   <div class="right">
@@ -67,16 +40,13 @@
                   </div>
                 </div>
                 <div class=" come album">
-                  <div
-                    class="left"
-                    style="width: 83px; border-right: 1px solid #ccc"
-                  >
+                  <div class="left" style="width: 83px; border-right: 1px solid #ccc">
                     <span>专辑</span>
                   </div>
                   <div class="right">
                     <p v-for="item in searchAlbums" :key="item.id">
-                      <span style="color: red">{{ item.name }}</span
-                      >- <span style="color: red">{{ item.artist.name }}</span>
+                      <span style="color: red">{{ item.name }}</span>- <span
+                        style="color: red">{{ item.artist.name }}</span>
                     </p>
                   </div>
                 </div>
@@ -85,18 +55,13 @@
           </div>
           <div class="searchKey">
             <h3 style="color: #fff">
-              搜索<span style="color: red">{{ searchEnterData }}</span
-              >,找到{{ searchOut.songCount }}的单曲
+              搜索<span style="color: red">{{ searchEnterData }}</span>,找到{{ searchOut.songCount }}的单曲
             </h3>
           </div>
           <div class="hr"></div>
         </div>
         <div class="optionsBar">
-          <el-tabs
-            type="border-card"
-            @tab-click="optionsPan"
-            v-model="activePan"
-          >
+          <el-tabs type="border-card" @tab-click="optionsPan" v-model="activePan">
             <el-tab-pane label="单曲" name="1">
               <sing-box ref="singBox" :search-out="searchOut"></sing-box>
             </el-tab-pane>
@@ -114,15 +79,9 @@
           <div class="commentBox">
             <el-card class="box-card">
               <div class="pagination">
-                <el-pagination
-                  background
-                  layout="total, sizes, prev, pager, next, jumper"
-                  :total="total"
-                  :page-sizes="[10, 20, 30, 40, 50]"
-                  @size-change="sizeChange"
-                  @next-click="nextClick"
-                  @current-change="currentChange"
-                >
+                <el-pagination background layout="total, sizes, prev, pager, next, jumper" :total="total"
+                  :page-sizes="[10, 20, 30, 40, 50]" @size-change="sizeChange" @next-click="nextClick"
+                  @current-change="currentChange">
                 </el-pagination>
               </div>
             </el-card>
@@ -147,7 +106,7 @@ export default {
     SingBox
   },
 
-  data() {
+  data () {
     return {
       index: "",
       flag: true,
@@ -168,14 +127,13 @@ export default {
   },
   computed: {
     ...mapState({
-      userImg: state => state.user.userAvatarUrl,
       buttonIndex: state => state.myTest.playButtonIndex,
       playListId: state => state.myTest.playListId,
       searchOut: state => state.myTest.searchOutCome
     })
   },
   filters: {
-    formatDate: function(time) {
+    formatDate: function (time) {
       var now = new Date(time);
       var year = now.getFullYear(); //取得4位数的年份
       var month = now.getMonth() + 1; //取得日期中的月份，其中0表示1月，11表示12月
@@ -197,7 +155,7 @@ export default {
         second
       );
     },
-    formMin: function(time) {
+    formMin: function (time) {
       var t = new Date(time);
       var m = t.getMinutes();
       var s = t.getSeconds();
@@ -206,7 +164,8 @@ export default {
       return m + ":" + s;
     }
   },
-  mounted() {
+  mounted () {
+    this.userImg = JSON.parse(sessionStorage.getItem("userImage")).userImage
     this.total = this.searchOut.songCount;
     this.songsId = this.playListId;
     this.searchEnterData = this.searchOut.keywords;
@@ -214,36 +173,36 @@ export default {
   },
 
   watch: {
-    datalist: function() {
+    datalist: function () {
       this.index = "";
       this.flag = true;
     },
-    $route: function(to, from) {
+    $route: function (to, from) {
       console.log("路由变化了");
     },
-    searchContent: function(newText, oldText) {
+    searchContent: function (newText, oldText) {
       this.getSearchContent(newText);
     }
   },
 
   methods: {
-    sizeChange(page) {
+    sizeChange (page) {
       // console.log('data是什么', data)
       this.searchOutHanle(page);
     },
-    nextClick(page) {
+    nextClick (page) {
       this.searchOutHanle(page);
     },
-    currentChange(p) {
+    currentChange (p) {
       if (this.flag) {
         this.searchOutHanle(p);
       }
       this.flag = true;
     },
-    playSong() {},
-    submitMyComment() {},
+    playSong () { },
+    submitMyComment () { },
     // 搜索结果处理
-    searchOutHanle(offset = 30) {
+    searchOutHanle (offset = 30) {
       if (this.searchContent == "") {
         return;
       }
@@ -274,7 +233,7 @@ export default {
     },
 
     // 搜索方法start
-    getSearchContent(text) {
+    getSearchContent (text) {
       if (text == "") {
         this.searchFlag = false;
         return;
@@ -294,21 +253,21 @@ export default {
       });
     },
 
-    gotoPlay(singId) {
+    gotoPlay (singId) {
       // console.log(this.$refs)
       // 调用子组件，去听歌
       this.$refs.singBox.gotoPlaySing(singId);
     },
 
     // 搜索部分
-    optionsPan(tab, event) {
+    optionsPan (tab, event) {
       console.log(tab);
       getCloundSearch(params);
     }
   },
 
   // 组件导航钩子
-  beforeRouteEnter(to, from, next) {
+  beforeRouteEnter (to, from, next) {
     next(vm => {
       var preplayListId = vm.$store.state.myTest.prePlayListId;
       var curPlayListId = vm.$store.state.myTest.playListId;
@@ -318,7 +277,7 @@ export default {
       }
     });
   },
-  beforeRouteLeave(to, from, next) {
+  beforeRouteLeave (to, from, next) {
     this.$store.commit("changePrePlayListId", this.songsId);
     next();
   }

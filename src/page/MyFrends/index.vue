@@ -1,9 +1,6 @@
 <template>
   <div class="myMusic-container">
-    <div
-      style="height: auto; border-right: 1px solid #eee;border-left: 1px solid #eee;"
-      class="container-content"
-    >
+    <div style="height: auto; border-right: 1px solid #eee;border-left: 1px solid #eee;" class="container-content">
       <div class="content-left">
         <div style="height: auto">
           <div style="margin: 10px 0" class="event-header">
@@ -11,12 +8,8 @@
               <span class="comment-title" style="font-size: 25px">动态</span>
             </div>
             <div class="sendMessage">
-              <el-button type="danger" icon="el-icon-edit" round
-                >发动态</el-button
-              >
-              <el-button type="danger" icon="el-icon-edit" round
-                >发视频</el-button
-              >
+              <el-button type="danger" icon="el-icon-edit" round>发动态</el-button>
+              <el-button type="danger" icon="el-icon-edit" round>发视频</el-button>
             </div>
           </div>
           <div class="hr"></div>
@@ -24,17 +17,10 @@
 
         <div class="playListTable">
           <div class="comment-content" v-loading="comentLoading">
-            <el-card
-              class="box-card"
-              v-for="(item, index) in eventData"
-              :key="index"
-            >
+            <el-card class="box-card" v-for="(item, index) in eventData" :key="index">
               <div class="img">
-                <el-image
-                  style="width: 100px; height: 100px"
-                  :src="item.user.avatarUrl"
-                  :preview-src-list="[item.user.avatarUrl]"
-                >
+                <el-image style="width: 100px; height: 100px" :src="item.user.avatarUrl"
+                  :preview-src-list="[item.user.avatarUrl]">
                 </el-image>
               </div>
               <div class="comment">
@@ -46,62 +32,38 @@
 
                 <div class="showImgBox">
                   <div class="imgbox" v-for="(img, i) in item.pics" :key="i">
-                    <el-image
-                      style="width: 100px; height: 100px"
-                      :src="img.pcRectangleUrl"
-                      :preview-src-list="[img.pcRectangleUrl]"
-                    >
+                    <el-image style="width: 100px; height: 100px" :src="img.pcRectangleUrl"
+                      :preview-src-list="[img.pcRectangleUrl]">
                     </el-image>
                   </div>
                 </div>
               </div>
 
               <div class="anwser" style="margin-bottom: 10px">
-                <el-button
-                  type="danger"
-                  size="mini"
-                  @click="
+                <el-button type="danger" size="mini" @click="
                     anwserHandle(
                       item.user.userId,
                       item.commentInfo.threadId,
                       item.showTime
                     );
-                  "
-                >
-                  打个招呼</el-button
-                >
+                  ">
+                  打个招呼</el-button>
               </div>
 
               <!-- 评论框 -->
 
               <div class="my-comment" v-if="item.showTime == showTime">
-                <el-input
-                  type="textarea"
-                  :rows="2"
-                  placeholder="评论"
-                  v-model="textarea"
-                  style="width: 100%"
-                >
+                <el-input type="textarea" :rows="2" placeholder="评论" v-model="textarea" style="width: 100%">
                 </el-input>
                 <div class="commentclick">
-                  <el-button type="primary" size="mini" @click="submitMyComment"
-                    >评论</el-button
-                  >
+                  <el-button type="primary" size="mini" @click="submitMyComment(item)">评论</el-button>
                 </div>
                 <!-- userCommentInfo -->
                 <div class="userCommentbox">
-                  <div
-                    class="content-card"
-                    v-for="item in userCommentInfo.comments"
-                    :key="item.time"
-                  >
+                  <div class="content-card" v-for="item in userCommentInfo.comments" :key="item.time">
                     <el-card :body-style="{ padding: '0px' }">
                       <div class="img">
-                        <img
-                          :src="item.user.avatarUrl"
-                          alt=""
-                          style="width: 40px;height: 40px"
-                        />
+                        <img :src="item.user.avatarUrl" alt="" style="width: 40px;height: 40px" />
                       </div>
                       <div class="comment">
                         <p>
@@ -124,15 +86,9 @@
           <div class="commentBox">
             <el-card class="box-card">
               <div class="pagination">
-                <el-pagination
-                  background
-                  layout="total, sizes, prev, pager, next, jumper"
-                  :total="total"
-                  :page-sizes="[10, 20, 30, 40, 50]"
-                  @size-change="sizeChange"
-                  @next-click="nextClick"
-                  @current-change="currentChange"
-                >
+                <el-pagination background layout="total, sizes, prev, pager, next, jumper" :total="total"
+                  :page-sizes="[10, 20, 30, 40, 50]" @size-change="sizeChange" @next-click="nextClick"
+                  @current-change="currentChange">
                 </el-pagination>
               </div>
             </el-card>
@@ -147,11 +103,7 @@
             <ul style="list-style: none;padding:0;margin: 0">
               <li v-for="(item, index) in simiPlayList" :key="index">
                 <div class="img">
-                  <img
-                    :src="item.coverImgUrl"
-                    alt=""
-                    style="width: 50px;height: 50px"
-                  />
+                  <img :src="item.coverImgUrl" alt="" style="width: 50px;height: 50px" />
                 </div>
                 <div class="comment">
                   <p class="relatedS" @click="playSong(item.id);">
@@ -173,15 +125,10 @@
             <ul style="list-style: none;padding:0;margin: 0">
               <li v-for="(item, index) in simiPlaysongs" :key="index">
                 <div class="comment">
-                  <div
-                    style="padding: 0;margin: 5px 0px;display:flex;justify-content: space-between;"
-                  >
+                  <div style="padding: 0;margin: 5px 0px;display:flex;justify-content: space-between;">
                     <span> {{ item.name }}</span>
-                    <span
-                      @click="playSong(item.id);"
-                      :loading="item.id === loadIndex"
-                      ><i class="el-icon-caret-right"></i
-                    ></span>
+                    <span @click="playSong(item.id);" :loading="item.id === loadIndex"><i
+                        class="el-icon-caret-right"></i></span>
                   </div>
                   <p style="padding: 0;margin: 0;color: #666">
                     {{ item.artists[0].name }}
@@ -199,12 +146,13 @@
 <script>
 import { get } from "@/utils/request";
 import { getEvent, getUserComment } from "@/api/getFrendEvent";
+import { submitComment } from "@/api/listenSing";
 import { getPlayListDetail, getRelatedPlayList } from "@/api/getSongsSheet";
 import { mapState } from "vuex";
 
 export default {
   name: "singInfo",
-  data() {
+  data () {
     return {
       id: this.$route.params.id,
       index: "",
@@ -235,7 +183,7 @@ export default {
     })
   },
   filters: {
-    formatDate: function(time) {
+    formatDate: function (time) {
       var now = new Date(time);
       var year = now.getFullYear(); //取得4位数的年份
       var month = now.getMonth() + 1; //取得日期中的月份，其中0表示1月，11表示12月
@@ -257,7 +205,7 @@ export default {
         second
       );
     },
-    formMin: function(time) {
+    formMin: function (time) {
       var t = new Date(time);
       var m = t.getMinutes();
       var s = t.getSeconds();
@@ -266,10 +214,10 @@ export default {
       return m + ":" + s;
     }
   },
-  created() {
+  created () {
     this.getEventIfno();
   },
-  mounted() {
+  mounted () {
     this.songsId = this.playListId;
     // this.getComment();
     // this.getPlaylist();
@@ -277,17 +225,17 @@ export default {
   },
 
   watch: {
-    datalist: function() {
+    datalist: function () {
       this.index = "";
       this.flag = true;
     },
-    $route: function(to, from) {
+    $route: function (to, from) {
       console.log("路由变化了");
     }
   },
 
   methods: {
-    getEventIfno() {
+    getEventIfno () {
       var p = {
         pageSize: 20
       };
@@ -299,7 +247,7 @@ export default {
         this.handleData(temp);
       });
     },
-    handleData(data) {
+    handleData (data) {
       for (let i = 0; i < data.length; i++) {
         var item = data[i];
         var temp = {
@@ -313,7 +261,7 @@ export default {
         this.eventData.push(temp);
       }
     },
-    anwserHandle(uId, threadId, time) {
+    anwserHandle (uId, threadId, time) {
       this.showTime = time;
       var params = {
         threadId
@@ -331,29 +279,61 @@ export default {
           console.log(err);
         });
     },
-    sizeChange(data) {
+    sizeChange (data) {
       this.pageSize = data;
       this.getComment();
     },
-    nextClick(p) {
+    nextClick (p) {
       this.offset = p;
       // 下一页
       this.flag = false;
       this.getComment();
     },
-    currentChange(p) {
+    currentChange (p) {
       if (this.flag) {
         this.offset = p;
         this.getComment();
       }
       this.flag = true;
     },
-    playSong() {},
-    submitMyComment() {}
+    playSong () { },
+    submitMyComment (item) {
+      if (this.textarea == '') {
+        this.$message({
+          type: warning,
+          title: '说点内容吧'
+        })
+        return
+      }
+      var threadId = item.commentInfo.threadId
+
+      var params = {
+        type: 6,
+        threadId: threadId,
+        content: this.textarea,
+      }
+      submitComment(params).then(res => {
+
+
+        if (res.data.code == 200) {
+          this.$message({
+            message: '评论好了',
+            type: 'success',
+            duration: 1 * 1000
+          })
+        }
+
+        this.textarea = ''
+
+      })
+
+
+
+    }
   },
 
   // 组件导航钩子
-  beforeRouteEnter(to, from, next) {
+  beforeRouteEnter (to, from, next) {
     next(vm => {
       var preplayListId = vm.$store.state.myTest.prePlayListId;
       var curPlayListId = vm.$store.state.myTest.playListId;
@@ -363,7 +343,7 @@ export default {
       }
     });
   },
-  beforeRouteLeave(to, from, next) {
+  beforeRouteLeave (to, from, next) {
     this.$store.commit("changePrePlayListId", this.songsId);
     next();
   }
@@ -481,5 +461,9 @@ export default {
 }
 .imgbox {
   margin-right: 10px;
+}
+/* 用户评论 */
+.userCommentbox {
+  margin-top: 10px;
 }
 </style>

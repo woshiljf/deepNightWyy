@@ -241,7 +241,6 @@ export default {
   },
   computed: {
     ...mapState({
-      userImg: state => state.user.userAvatarUrl,
       buttonIndex: state => state.myTest.playButtonIndex,
       playListId: state => state.myTest.playListId
     })
@@ -284,6 +283,7 @@ export default {
     this.getComment();
     this.getPlaylist();
     this.getRelatedList();
+    this.userImg = JSON.parse(sessionStorage.getItem("userImage")).userImage
   },
 
   watch: {

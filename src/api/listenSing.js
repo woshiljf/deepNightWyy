@@ -60,6 +60,7 @@ tpye: 数字 , 资源类型 , 对应歌曲 , mv, 专辑 , 歌单 , 电台, 视�
 4: 电台
 
 5: 视频
+6： 动态
  */
 export function submitComment(info) {
     var obj = {
