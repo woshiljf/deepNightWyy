@@ -4,80 +4,31 @@
       <div class="content-left">
         <div style="height: auto">
           <div style="margin: 10px 0" class="event-header">
-            <div class="text"><span class="comment-title" style="font-size: 25px">动态</span></div>
-            <div class="sendMessage">
-              <el-button type="danger" icon="el-icon-edit" round>发动态</el-button>
-              <el-button type="danger" icon="el-icon-edit" round>发视频</el-button>
+            <div class="text">
+              <span class="comment-title" style="font-size: 25px">我们试着像以前一样快乐。。。</span>
             </div>
           </div>
           <div class="hr"></div>
         </div>
 
         <div class="playListTable">
-
           <div class="comment-content" v-loading="comentLoading">
-            <el-card class="box-card" v-for="(item,index) in eventData" :key="index">
-              <div class="img">
-                <img :src="item.user.avatarUrl" alt="" style="width: 80px;height: 80px" />
-              </div>
+            <el-card class="box-card" v-for="(item, index) in happlyList" :key="index">
               <div class="comment">
                 <p>
-                  {{ item.user.nickname }}: <span>{{ item.info.msg }}</span>
+                  {{ item.content }}
                 </p>
 
-                <p>{{ item.showTime | formatDate(item.showTime) }}</p>
-
                 <div class="showImgBox">
-
-                  <div class="imgbox" v-for="(img,i) in item.pics" :key="i">
-                    <img style="width: 140px;height:140px" :src="img.pcRectangleUrl" alt="">
+                  <div class="imgbox" v-for="(img, i) in item.pics" :key="i">
+                    <el-image style="width: 100px; height: 100px" :src="img.pcRectangleUrl"
+                      :preview-src-list="[img.pcRectangleUrl]">
+                    </el-image>
                   </div>
-
                 </div>
-
               </div>
-
-              <div class="anwser" style="margin-bottom: 10px">
-                <el-button type="danger" size="mini"
-                  @click="anwserHandle(item.user.userId,item.commentInfo.threadId,item.showTime);">
-                  打个招呼</el-button>
-              </div>
-
-              <!-- 评论框 -->
-
-              <div class="my-comment" v-if="item.showTime ==showTime">
-                <el-input type="textarea" :rows="2" placeholder="评论" v-model="textarea" style="width: 100%">
-                </el-input>
-                <div class="commentclick">
-                  <el-button type="primary" size="mini" @click="submitMyComment">评论</el-button>
-                </div>
-                <!-- userCommentInfo -->
-                <div class="userCommentbox">
-
-                  <div class="content-card" v-for="item in userCommentInfo.comments" :key="item.time">
-
-                    <el-card :body-style="{ padding: '0px' }">
-                      <div class="img">
-                        <img :src="item.user.avatarUrl" alt="" style="width: 40px;height: 40px" />
-                      </div>
-                      <div class="comment">
-                        <p>
-                          {{ item.user.nickname }}: <span>{{ item.content }}</span>
-                        </p>
-
-                        <p>{{ item.time | formatDate(item.time) }}</p>
-                      </div>
-                    </el-card>
-
-                  </div>
-
-                </div>
-
-              </div>
-
             </el-card>
           </div>
-
         </div>
 
         <!-- 地下评论 -->
@@ -86,55 +37,11 @@
             <el-card class="box-card">
               <div class="pagination">
                 <el-pagination background layout="total, sizes, prev, pager, next, jumper" :total="total"
-                  :page-sizes="[10, 20, 30, 40, 50]" @size-change="sizeChange" @next-click="nextClick"
+                  :page-sizes="[10, 20]" @size-change="sizeChange" @next-click="nextClick"
                   @current-change="currentChange">
                 </el-pagination>
               </div>
             </el-card>
-          </div>
-        </div>
-      </div>
-      <div class="content-right">
-        <div class="one">
-          <h3>相关的歌单</h3>
-          <hr />
-          <div class="simi-content">
-            <ul style="list-style: none;padding:0;margin: 0">
-              <li v-for="(item, index) in simiPlayList" :key="index">
-                <div class="img">
-                  <img :src="item.coverImgUrl" alt="" style="width: 50px;height: 50px" />
-                </div>
-                <div class="comment">
-                  <p class="relatedS" @click="playSong(item.id);">
-                    {{ item.name }}
-                  </p>
-                  <p class="relatedS" style="color: #666;font-size: 12px">
-                    by{{ item.creator.nickname }}
-                  </p>
-                </div>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="two">
-          <h3>相似的歌曲</h3>
-          <hr />
-          <div class="simi-content">
-            <ul style="list-style: none;padding:0;margin: 0">
-              <li v-for="(item, index) in simiPlaysongs" :key="index">
-                <div class="comment">
-                  <div style="padding: 0;margin: 5px 0px;display:flex;justify-content: space-between;">
-                    <span> {{ item.name }}</span>
-                    <span @click="playSong(item.id);" :loading="item.id === loadIndex"><i
-                        class="el-icon-caret-right"></i></span>
-                  </div>
-                  <p style="padding: 0;margin: 0;color: #666">
-                    {{ item.artists[0].name }}
-                  </p>
-                </div>
-              </li>
-            </ul>
           </div>
         </div>
       </div>
@@ -145,6 +52,7 @@
 <script>
 import { get } from "@/utils/request";
 import { getEvent, getUserComment } from "@/api/getFrendEvent";
+import { submitComment } from "@/api/listenSing";
 import { getPlayListDetail, getRelatedPlayList } from "@/api/getSongsSheet";
 import { mapState } from "vuex";
 import $ from 'jquery'
@@ -159,22 +67,24 @@ export default {
       eventData: [],
       aboutUser: null,
       showTime: 0,
-      textarea: '',
-      simiPlayList: '',
-      simiPlaysongs: '',
-      total: 10,
+      textarea: "",
+      simiPlayList: "",
+      simiPlaysongs: "",
+      total: 100,
       comentLoading: false,
       loadIndex: Infinity,
       userCommentInfo: {
         comments: null,
         hotComments: null,
         total: 0,
-        userId: 0,
-      }
+        userId: 0
+      },
+      happlyList: []
     };
   },
   computed: {
     ...mapState({
+      userImg: state => state.user.userAvatarUrl,
       buttonIndex: state => state.myTest.playButtonIndex,
       playListId: state => state.myTest.playListId
     })
@@ -212,12 +122,12 @@ export default {
     }
   },
   created () {
-    this.getEventIfno();
-    this.getAdvdio()
+    // this.getEventIfno();
+
+    this.getHappyContent()
   },
   mounted () {
     this.songsId = this.playListId;
-    this.userImg = JSON.parse(sessionStorage.getItem("userImage")).userImage
     // this.getComment();
     // this.getPlaylist();
     // this.getRelatedList();
@@ -234,89 +144,54 @@ export default {
   },
 
   methods: {
-    getEventIfno () {
-      var p = {
-        pageSize: 20
-      };
-      getEvent(p).then(res => {
-        this.aboutUser = res.data
-        var temp = res.data.event;
 
-        this.handleData(temp);
-      });
-    },
-    handleData (data) {
-      for (let i = 0; i < data.length; i++) {
-        var item = data[i];
-        var temp = {
-          info: JSON.parse(item.json),
-          user: item.user,
-          showTime: item.showTime,
-          id: item.id,
-          commentInfo: item.info,
-          pics: item.pics
-        }
-        this.eventData.push(temp);
-      }
-
-    },
-    anwserHandle (uId, threadId, time) {
-
-      this.showTime = time
-      var params = {
-        threadId
-      }
-      getUserComment(params).then(res => {
-        this.userCommentInfo = {
-
-          comments: res.data.comments,
-          userId: res.data.userId,
-          total: res.data.total,
-          hotComments: res.data.hotComments
-        }
-      }).catch(err => {
-        console.log(err);
-      })
-
-    },
     sizeChange (data) {
       this.pageSize = data;
-      this.getComment();
+      this.getHappyContent()
+
     },
     nextClick (p) {
       this.offset = p;
       // 下一页
       this.flag = false;
-      this.getComment();
+      this.getHappyContent(p)
     },
     currentChange (p) {
       if (this.flag) {
         this.offset = p;
-        this.getComment();
+        this.getHappyContent(p)
+
       }
       this.flag = true;
     },
-    playSong () { },
-    submitMyComment () { },
-    getAdvdio () {
+    getHappyContent (num = 1) {
+      var tmp = Date.parse(new Date()).toString();
+      tmp = tmp.substr(0, 10);
+      var params = {
+        key: '6e5562f4870ea8399cf3ed47156fa17e',
+        time: tmp,
+        sort: 'desc',
+        pageSize: 20,
+        page: num
+      }
+      // 临时存组件实例
       var _this = this
       $.ajax({
         type: 'get',
-        url: "https://api.apiopen.top/getJoke?page=1&count=2&type=video",
-        data: '',
+        url: "http://v.juhe.cn/joke/content/list.php",
+        data: params,
         dataType: "jsonp", //xml json html script jsonp text
         success: function (res) {
-
           var data = JSON.stringify(res)
           var data2 = JSON.parse(data)
-          // _this.happlyList = data2.result.data
-          console.log('视频数据', data2);
+          _this.happlyList = data2.result.data
         },
         //查看服务器错误信息
         error: function (data) {
           console.log('请求失败了');
         }
       });
+
     }
 
   },
@@ -344,6 +219,7 @@ export default {
   padding: 0 200px;
   height: auto;
   justify-content: space-between;
+  padding-bottom: 80px;
 }
 .coverImgurl {
   width: 50px;
@@ -449,5 +325,9 @@ export default {
 }
 .imgbox {
   margin-right: 10px;
+}
+/* 用户评论 */
+.userCommentbox {
+  margin-top: 10px;
 }
 </style>

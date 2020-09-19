@@ -13,9 +13,9 @@
           <el-menu-item index="2" @click="myMusicHandle">我的音乐
           </el-menu-item>
           <el-menu-item index="3" @click="frendsHandle">朋友</el-menu-item>
-          <el-menu-item index="4" @click="shopHandle"> 商城 </el-menu-item>
+          <el-menu-item index="4" @click="shopHandle"> 视频 </el-menu-item>
           <el-menu-item index="5" @click="musicPersonHandle">音乐人</el-menu-item>
-          <el-menu-item index="6" @click="downLoad">抑郁时刻</el-menu-item>
+          <el-menu-item index="6" @click="happyTime">快乐一下</el-menu-item>
         </el-menu>
       </div>
       <div>
@@ -156,7 +156,14 @@ export default {
 
     handleSelect () { },
 
-    downLoad () { },
+    happyTime () {
+
+
+      console.log('fdsf')
+      this.$router.push({ path: "/happyTime" });
+
+
+    },
     handlekey (e) {
       if (this.searchKewords == "") {
         return;
@@ -216,7 +223,7 @@ export default {
           order,
           isShow: this.searchFlag
         };
-
+        // 点击到确认到搜索界面可以看到搜索关键字
         this.$store.commit("changeSearchInfo", obj);
       });
     }

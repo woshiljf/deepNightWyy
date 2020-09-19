@@ -23,6 +23,8 @@ import myHome from "@/page/myHome/index.vue";
 import loginDash from "@/page/loginDash/index.vue";
 
 import homePlay from "@/page/lunboSong/index.vue";
+import happyTime from "@/page/happyTime/index.vue";
+
 // 要告诉 vue 使用 vueRouter
 Vue.use(VueRouter);
 
@@ -92,6 +94,26 @@ let routes = [{
             path: "/mymusic",
             name: "我的音乐1",
             component: MyMusic,
+            meta: {
+                keepAlive: true // 不需要缓存
+            },
+            hidden: true
+        }]
+    },
+
+    {
+        path: "myHappy",
+        component: home,
+        single: true,
+        name: "happy",
+        meta: {
+            keepAlive: true // 不需要缓存
+        },
+        iconCls: "el-icon-s-home", //图标样式class
+        children: [{
+            path: "/happyTime",
+            name: "happy",
+            component: happyTime,
             meta: {
                 keepAlive: true // 不需要缓存
             },

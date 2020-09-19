@@ -8,15 +8,13 @@ import route from "../router/index.js";
 
 // 创建axios对象http://123.207.32.32:9001
 // axios.defaults.withCredentials = true
-const baseURLStr = 'http://3362u865n6.zicp.vip/'
+const baseURLStr = "http://3362u865n6.zicp.vip/";
 const service = axios.create({
     baseURL: process.env.BASE_API, // api 的 base_url
     // baseURL: "http://3362u865n6.zicp.vip",
     // baseURL: "http://123.207.32.32:9001",
     timeout: 50000, // request timeout
     withCredentials: true
-
-
 });
 // function removeEmptyParmas(parmas) {
 //   for (const k in parmas) {
@@ -32,8 +30,8 @@ const service = axios.create({
 // 请求拦截
 service.interceptors.request.use(
     config => {
-        if (process.env.NODE_ENV == 'production') {
-            config.url = baseURLStr + config.url.substr(4)
+        if (process.env.NODE_ENV == "production") {
+            config.url = baseURLStr + config.url.substr(4);
         }
         // 流量统计中文转换
         // pvuvChangeName(config)
@@ -42,8 +40,8 @@ service.interceptors.request.use(
             config.headers["Authorization"] = getToken();
         }
         config.headers = {
-            "Content-Type": "application/json",
-        }
+            "Content-Type": "application/json"
+        };
         return config;
     },
     error => {
@@ -62,14 +60,11 @@ service.interceptors.response.use(
         // 保存审计日志
         // saveAuditLog(response)
         if (status === 200 || status === 0 || status === 204) {
-
             // response.setHeader("SameSite=None; Secure")
             // response.setcookie('SameSite=None; Secure')
             // response.setHeader("Access-Control-Allow-Credentials", "true");
 
-
             return Promise.resolve(response);
-
         } else {
             window.VUE_SCOPE.$message.error(msg || "请求失败，请重试");
             return Promise.reject(msg);
